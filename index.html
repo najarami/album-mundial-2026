@@ -1152,7 +1152,7 @@
       <div class="hero-content">
         <div class="hero-label">Progreso del álbum</div>
         <div class="hero-progress-num">
-          <span id="num-owned">0</span><span class="total">/980</span>
+          <span id="num-owned">0</span><span class="total" id="num-total">/980</span>
         </div>
         <div class="hero-progress-pct" id="num-pct">0% completado</div>
         <div class="hero-bar"><div class="hero-bar-fill" id="bar-fill" style="width:0%"></div></div>
@@ -1182,7 +1182,7 @@
 
     <div class="search-wrap" id="search-wrap">
       <span class="search-icon">⌕</span>
-      <input id="search" class="search" type="text" placeholder="Buscar selección, confederación o número…" />
+      <input id="search" class="search" type="text" placeholder="Buscar selección, código (ARG, BRA…) o lámina…" />
     </div>
 
     <div id="content"></div>
@@ -1205,68 +1205,90 @@ const FAMILY_KEY_PREFIX = 'panini_mundial_2026_family_';
 const SESSION_KEY = 'panini_mundial_2026_user';
 
 // ===================== DATA =====================
+// Cada selección tiene 20 láminas (escudo + 19 jugadores).
+// IDs internos: <CODIGO_FIFA><número>, ej: ARG1, ARG2 ... ARG20
+// Sección especial: FWC1 a FWC8 (intro + FIFA World Cup)
+const STICKERS_PER_TEAM = 20;
+
 const teams = [
-  {n:"Canadá", g:"Anfitriones", c:"#dc2626"},
-  {n:"México", g:"Anfitriones", c:"#16a34a"},
-  {n:"Estados Unidos", g:"Anfitriones", c:"#2563eb"},
-  {n:"Argentina", g:"CONMEBOL", c:"#60a5fa"},
-  {n:"Brasil", g:"CONMEBOL", c:"#facc15"},
-  {n:"Uruguay", g:"CONMEBOL", c:"#1e40af"},
-  {n:"Colombia", g:"CONMEBOL", c:"#fbbf24"},
-  {n:"Ecuador", g:"CONMEBOL", c:"#fbbf24"},
-  {n:"Paraguay", g:"CONMEBOL", c:"#dc2626"},
-  {n:"Alemania", g:"UEFA", c:"#1f2937"},
-  {n:"Francia", g:"UEFA", c:"#2563eb"},
-  {n:"España", g:"UEFA", c:"#dc2626"},
-  {n:"Inglaterra", g:"UEFA", c:"#dc2626"},
-  {n:"Portugal", g:"UEFA", c:"#16a34a"},
-  {n:"Países Bajos", g:"UEFA", c:"#ea580c"},
-  {n:"Bélgica", g:"UEFA", c:"#dc2626"},
-  {n:"Croacia", g:"UEFA", c:"#dc2626"},
-  {n:"Italia", g:"UEFA", c:"#1d4ed8"},
-  {n:"Suiza", g:"UEFA", c:"#dc2626"},
-  {n:"Austria", g:"UEFA", c:"#dc2626"},
-  {n:"Dinamarca", g:"UEFA", c:"#dc2626"},
-  {n:"Noruega", g:"UEFA", c:"#dc2626"},
-  {n:"Escocia", g:"UEFA", c:"#1d4ed8"},
-  {n:"Turquía", g:"UEFA", c:"#dc2626"},
-  {n:"Polonia", g:"UEFA", c:"#dc2626"},
-  {n:"Chequia", g:"UEFA", c:"#1d4ed8"},
-  {n:"Costa Rica", g:"CONCACAF", c:"#dc2626"},
-  {n:"Panamá", g:"CONCACAF", c:"#dc2626"},
-  {n:"Jamaica", g:"CONCACAF", c:"#16a34a"},
-  {n:"Honduras", g:"CONCACAF", c:"#1d4ed8"},
-  {n:"Marruecos", g:"CAF", c:"#dc2626"},
-  {n:"Senegal", g:"CAF", c:"#16a34a"},
-  {n:"Egipto", g:"CAF", c:"#dc2626"},
-  {n:"Argelia", g:"CAF", c:"#16a34a"},
-  {n:"Túnez", g:"CAF", c:"#dc2626"},
-  {n:"Nigeria", g:"CAF", c:"#16a34a"},
-  {n:"Costa de Marfil", g:"CAF", c:"#ea580c"},
-  {n:"Ghana", g:"CAF", c:"#dc2626"},
-  {n:"Sudáfrica", g:"CAF", c:"#16a34a"},
-  {n:"Camerún", g:"CAF", c:"#16a34a"},
-  {n:"Japón", g:"AFC", c:"#1d4ed8"},
-  {n:"Corea del Sur", g:"AFC", c:"#dc2626"},
-  {n:"Irán", g:"AFC", c:"#16a34a"},
-  {n:"Australia", g:"AFC", c:"#facc15"},
-  {n:"Arabia Saudita", g:"AFC", c:"#16a34a"},
-  {n:"Catar", g:"AFC", c:"#7c2d12"},
-  {n:"Uzbekistán", g:"AFC", c:"#0d9488"},
-  {n:"Nueva Zelanda", g:"OFC", c:"#374151"}
+  {n:"Canadá", code:"CAN", g:"Anfitriones", c:"#dc2626"},
+  {n:"México", code:"MEX", g:"Anfitriones", c:"#16a34a"},
+  {n:"Estados Unidos", code:"USA", g:"Anfitriones", c:"#2563eb"},
+  {n:"Argentina", code:"ARG", g:"CONMEBOL", c:"#60a5fa"},
+  {n:"Brasil", code:"BRA", g:"CONMEBOL", c:"#facc15"},
+  {n:"Uruguay", code:"URU", g:"CONMEBOL", c:"#1e40af"},
+  {n:"Colombia", code:"COL", g:"CONMEBOL", c:"#fbbf24"},
+  {n:"Ecuador", code:"ECU", g:"CONMEBOL", c:"#fbbf24"},
+  {n:"Paraguay", code:"PAR", g:"CONMEBOL", c:"#dc2626"},
+  {n:"Alemania", code:"GER", g:"UEFA", c:"#1f2937"},
+  {n:"Francia", code:"FRA", g:"UEFA", c:"#2563eb"},
+  {n:"España", code:"ESP", g:"UEFA", c:"#dc2626"},
+  {n:"Inglaterra", code:"ENG", g:"UEFA", c:"#dc2626"},
+  {n:"Portugal", code:"POR", g:"UEFA", c:"#16a34a"},
+  {n:"Países Bajos", code:"NED", g:"UEFA", c:"#ea580c"},
+  {n:"Bélgica", code:"BEL", g:"UEFA", c:"#dc2626"},
+  {n:"Croacia", code:"CRO", g:"UEFA", c:"#dc2626"},
+  {n:"Italia", code:"ITA", g:"UEFA", c:"#1d4ed8"},
+  {n:"Suiza", code:"SUI", g:"UEFA", c:"#dc2626"},
+  {n:"Austria", code:"AUT", g:"UEFA", c:"#dc2626"},
+  {n:"Dinamarca", code:"DEN", g:"UEFA", c:"#dc2626"},
+  {n:"Noruega", code:"NOR", g:"UEFA", c:"#dc2626"},
+  {n:"Escocia", code:"SCO", g:"UEFA", c:"#1d4ed8"},
+  {n:"Turquía", code:"TUR", g:"UEFA", c:"#dc2626"},
+  {n:"Polonia", code:"POL", g:"UEFA", c:"#dc2626"},
+  {n:"Chequia", code:"CZE", g:"UEFA", c:"#1d4ed8"},
+  {n:"Costa Rica", code:"CRC", g:"CONCACAF", c:"#dc2626"},
+  {n:"Panamá", code:"PAN", g:"CONCACAF", c:"#dc2626"},
+  {n:"Jamaica", code:"JAM", g:"CONCACAF", c:"#16a34a"},
+  {n:"Honduras", code:"HON", g:"CONCACAF", c:"#1d4ed8"},
+  {n:"Marruecos", code:"MAR", g:"CAF", c:"#dc2626"},
+  {n:"Senegal", code:"SEN", g:"CAF", c:"#16a34a"},
+  {n:"Egipto", code:"EGY", g:"CAF", c:"#dc2626"},
+  {n:"Argelia", code:"ALG", g:"CAF", c:"#16a34a"},
+  {n:"Túnez", code:"TUN", g:"CAF", c:"#dc2626"},
+  {n:"Nigeria", code:"NGA", g:"CAF", c:"#16a34a"},
+  {n:"Costa de Marfil", code:"CIV", g:"CAF", c:"#ea580c"},
+  {n:"Ghana", code:"GHA", g:"CAF", c:"#dc2626"},
+  {n:"Sudáfrica", code:"RSA", g:"CAF", c:"#16a34a"},
+  {n:"Camerún", code:"CMR", g:"CAF", c:"#16a34a"},
+  {n:"Japón", code:"JPN", g:"AFC", c:"#1d4ed8"},
+  {n:"Corea del Sur", code:"KOR", g:"AFC", c:"#dc2626"},
+  {n:"Irán", code:"IRN", g:"AFC", c:"#16a34a"},
+  {n:"Australia", code:"AUS", g:"AFC", c:"#facc15"},
+  {n:"Arabia Saudita", code:"KSA", g:"AFC", c:"#16a34a"},
+  {n:"Catar", code:"QAT", g:"AFC", c:"#7c2d12"},
+  {n:"Uzbekistán", code:"UZB", g:"AFC", c:"#0d9488"},
+  {n:"Nueva Zelanda", code:"NZL", g:"OFC", c:"#374151"}
 ];
 
-let cursor = 20;
-teams.forEach(t => { t.start = cursor; t.end = cursor + 18; cursor += 19; });
+// Generar lista de IDs por equipo: ARG1, ARG2, ..., ARG20
+teams.forEach(t => {
+  t.ids = [];
+  for (let i = 1; i <= STICKERS_PER_TEAM; i++) {
+    t.ids.push(t.code + i);
+  }
+});
 
+// Secciones especiales: lámina 00 + FWC1 a FWC19
 const specials = [
-  {title:"Intro & FIFA World Cup", start:1, end:9, gold:true},
-  {title:"Mascota & estadios", start:10, end:19, gold:false},
-  {title:"Leyendas del Mundial", start:932, end:955, gold:true},
-  {title:"Momentos históricos", start:956, end:980, gold:false}
+  {
+    title: "Lámina 00",
+    prefix: "",
+    count: 1,
+    gold: true,
+    ids: ["00"]
+  },
+  {
+    title: "FIFA World Cup",
+    prefix: "FWC",
+    count: 19,
+    gold: true,
+    ids: Array.from({length: 19}, (_, i) => "FWC" + (i + 1))
+  }
 ];
 
-const TOTAL = 980;
+// Total = especiales + 48 equipos × 20 láminas
+const TOTAL = specials.reduce((acc, s) => acc + s.count, 0) + teams.length * STICKERS_PER_TEAM;
 
 // ===================== STATE =====================
 let userCode = null;
@@ -1488,26 +1510,26 @@ function logout() {
 }
 
 // ===================== ACTIONS =====================
-function toggleOwned(n) {
-  if (state.owned[n]) {
-    delete state.owned[n];
-    delete state.dupes[n];
+function toggleOwned(id) {
+  if (state.owned[id]) {
+    delete state.owned[id];
+    delete state.dupes[id];
   } else {
-    state.owned[n] = true;
+    state.owned[id] = true;
   }
   scheduleSave();
   render();
   updateStats();
 }
 
-function addDupe(n, ev) {
+function addDupe(id, ev) {
   if (ev) ev.preventDefault();
-  if (!state.owned[n]) {
-    state.owned[n] = true;
-    showToast(`#${n} marcada como tenida`);
+  if (!state.owned[id]) {
+    state.owned[id] = true;
+    showToast(`${id} marcada como tenida`);
   } else {
-    state.dupes[n] = (state.dupes[n] || 0) + 1;
-    showToast(`#${n} +1 repe (×${state.dupes[n]})`);
+    state.dupes[id] = (state.dupes[id] || 0) + 1;
+    showToast(`${id} +1 repe (×${state.dupes[id]})`);
   }
   scheduleSave();
   render();
@@ -1515,10 +1537,10 @@ function addDupe(n, ev) {
   return false;
 }
 
-function removeDupe(n) {
-  if (state.dupes[n] > 0) {
-    state.dupes[n]--;
-    if (state.dupes[n] === 0) delete state.dupes[n];
+function removeDupe(id) {
+  if (state.dupes[id] > 0) {
+    state.dupes[id]--;
+    if (state.dupes[id] === 0) delete state.dupes[id];
   }
   scheduleSave();
   render();
@@ -1545,12 +1567,12 @@ function markTeamAll(name, ev) {
   const t = teams.find(x => x.n === name);
   if (!t) return;
   let allOwned = true;
-  for (let i = t.start; i <= t.end; i++) {
-    if (!state.owned[i]) { allOwned = false; break; }
+  for (const id of t.ids) {
+    if (!state.owned[id]) { allOwned = false; break; }
   }
-  for (let i = t.start; i <= t.end; i++) {
-    if (allOwned) delete state.owned[i];
-    else state.owned[i] = true;
+  for (const id of t.ids) {
+    if (allOwned) delete state.owned[id];
+    else state.owned[id] = true;
   }
   scheduleSave();
   render();
@@ -1588,17 +1610,21 @@ function exportData() {
   lines.push(`Faltan:    ${TOTAL - owned}`);
   lines.push(`Repes:     ${dupes}`);
   lines.push("");
-  lines.push("─── FALTANTES POR SELECCIÓN ───");
+  lines.push("─── FALTANTES ───");
+  // Especiales primero
+  specials.forEach(s => {
+    const missing = s.ids.filter(id => !state.owned[id]);
+    if (missing.length) lines.push(`${s.title} (${missing.length}): ${missing.join(", ")}`);
+  });
   teams.forEach(t => {
-    const missing = [];
-    for (let i = t.start; i <= t.end; i++) if (!state.owned[i]) missing.push(i);
+    const missing = t.ids.filter(id => !state.owned[id]);
     if (missing.length) lines.push(`${t.n} (${missing.length}): ${missing.join(", ")}`);
   });
   lines.push("");
   lines.push("─── REPES PARA INTERCAMBIAR ───");
-  const dupeNums = Object.keys(state.dupes).map(Number).sort((a,b)=>a-b);
-  if (dupeNums.length === 0) lines.push("(ninguna)");
-  else dupeNums.forEach(n => lines.push(`#${n} ×${state.dupes[n]}`));
+  const dupeIds = Object.keys(state.dupes).sort();
+  if (dupeIds.length === 0) lines.push("(ninguna)");
+  else dupeIds.forEach(id => lines.push(`${id} ×${state.dupes[id]}`));
   const text = lines.join("\n");
 
   showModal({
@@ -1672,13 +1698,15 @@ document.getElementById('modal').addEventListener('click', (e) => {
 function updateStats() {
   const owned = Object.keys(state.owned).length;
   const dupes = Object.values(state.dupes).reduce((a,b)=>a+b,0);
-  const pct = Math.round((owned / TOTAL) * 100);
+  const pct = TOTAL > 0 ? Math.round((owned / TOTAL) * 100) : 0;
   document.getElementById('num-owned').textContent = owned;
   document.getElementById('num-owned-2').textContent = owned;
   document.getElementById('num-missing').textContent = TOTAL - owned;
   document.getElementById('num-dupes').textContent = dupes;
   document.getElementById('num-pct').textContent = `${pct}% completado`;
   document.getElementById('bar-fill').style.width = `${pct}%`;
+  const totEl = document.getElementById('num-total');
+  if (totEl) totEl.textContent = `/${TOTAL}`;
 }
 
 // ===================== RENDER =====================
@@ -1692,33 +1720,43 @@ function escapeAttr(s) {
   return String(s).replace(/'/g, '&#39;').replace(/"/g, '&quot;');
 }
 
-function stickerHTML(n, opts = {}) {
-  const owned = !!state.owned[n];
-  const dupes = state.dupes[n] || 0;
+function stickerHTML(id, opts = {}) {
+  const owned = !!state.owned[id];
+  const dupes = state.dupes[id] || 0;
   const cls = ['sticker'];
   if (owned) cls.push('owned');
   if (opts.shield) cls.push('shield');
   if (opts.special) cls.push('special');
+  // Mostrar solo el número (sin prefijo) si pertenece a un equipo
+  // y opts.showFull es false. Para vista por código completa, showFull=true.
+  let label;
+  if (opts.showFull) {
+    label = id;
+  } else if (opts.numOnly) {
+    label = String(opts.numOnly);
+  } else {
+    label = id;
+  }
   return `<button class="${cls.join(' ')}"
-    onclick="toggleOwned(${n})"
-    oncontextmenu="return addDupe(${n},event)"
-    ontouchstart="startTouch(${n})"
+    onclick="toggleOwned('${id}')"
+    oncontextmenu="return addDupe('${id}',event)"
+    ontouchstart="startTouch('${id}')"
     ontouchend="endTouch(event)"
     ontouchmove="endTouch(event)"
-    title="Click: tenida · Mantener: +repe">
-    ${n}
+    title="${id} · Click: tenida · Mantener: +repe">
+    ${label}
     ${dupes > 0 ? `<span class="dupe-badge">+${dupes}</span>` : ''}
   </button>`;
 }
 
 let touchTimer = null;
-let touchedN = null;
-window.startTouch = function(n) {
-  touchedN = n;
+let touchedId = null;
+window.startTouch = function(id) {
+  touchedId = id;
   touchTimer = setTimeout(() => {
-    if (touchedN === n) {
-      addDupe(n);
-      touchedN = null;
+    if (touchedId === id) {
+      addDupe(id);
+      touchedId = null;
       window._suppressClick = true;
       setTimeout(() => { window._suppressClick = false; }, 400);
     }
@@ -1726,7 +1764,7 @@ window.startTouch = function(n) {
 };
 window.endTouch = function(e) {
   if (touchTimer) { clearTimeout(touchTimer); touchTimer = null; }
-  touchedN = null;
+  touchedId = null;
 };
 
 document.addEventListener('click', (e) => {
@@ -1748,22 +1786,31 @@ function render() {
 function renderTeams(q) {
   let html = '';
 
+  // Especiales
   const specialsMatch = specials.filter(s =>
     !q || s.title.toLowerCase().includes(q) ||
-    Array.from({length: s.end - s.start + 1}, (_,i) => String(s.start + i)).some(n => n.includes(q))
+    s.prefix.toLowerCase().includes(q) ||
+    s.ids.some(id => id.toLowerCase().includes(q))
   );
 
   if (specialsMatch.length) {
     html += `<div class="conf-label">Especiales</div>`;
     specialsMatch.forEach(s => {
-      let owned = 0;
-      for (let i = s.start; i <= s.end; i++) if (state.owned[i]) owned++;
-      const total = s.end - s.start + 1;
+      const owned = s.ids.filter(id => state.owned[id]).length;
+      const total = s.count;
       const isOpen = openTeams.has(s.title);
       const pct = Math.round(owned / total * 100);
       const goldClass = s.gold ? ' gold' : '';
       const completeClass = (owned === total) ? ' complete' : '';
       const openClass = isOpen ? ' open' : '';
+      // Etiqueta del rango: si tiene prefijo y es múltiple, mostrar rango FWC1—FWC19
+      // Si no, listar los IDs (ej: "00")
+      let rangeLabel;
+      if (s.prefix && total > 1) {
+        rangeLabel = `${s.prefix}1 — ${s.prefix}${total}`;
+      } else {
+        rangeLabel = s.ids.join(', ');
+      }
       html += `<div class="team-card special-card${goldClass}${completeClass}${openClass}">
         <div class="team-head" onclick="toggleTeam('${escapeAttr(s.title)}')">
           <div class="team-flag" style="background: ${s.gold ? '#ffb800' : '#00d9ff'};"></div>
@@ -1775,22 +1822,30 @@ function renderTeams(q) {
           <span class="chevron">▶</span>
         </div>
         <div class="team-body">
-          <div class="sticker-section-label">Láminas ${s.start}–${s.end}</div>
+          <div class="sticker-section-label">${escapeHtml(rangeLabel)}</div>
           <div class="sticker-grid">${
-            Array.from({length: total}, (_,i) => stickerHTML(s.start + i, {special: s.gold})).join('')
+            s.ids.map((id, i) => {
+              // Para FWC y similares: mostrar solo número. Para "00": mostrar el ID literal.
+              const opts = s.prefix
+                ? {special: s.gold, numOnly: i + 1}
+                : {special: s.gold, showFull: true};
+              return stickerHTML(id, opts);
+            }).join('')
           }</div>
         </div>
       </div>`;
     });
   }
 
+  // Equipos por confederación
   const byConf = {};
   teams.forEach(t => {
     if (q) {
       const matchName = t.n.toLowerCase().includes(q);
       const matchConf = t.g.toLowerCase().includes(q);
-      const matchNum = Array.from({length:19}, (_,i) => String(t.start + i)).some(n => n.includes(q));
-      if (!matchName && !matchConf && !matchNum) return;
+      const matchCode = t.code.toLowerCase().includes(q);
+      const matchId = t.ids.some(id => id.toLowerCase().includes(q));
+      if (!matchName && !matchConf && !matchCode && !matchId) return;
     }
     if (!byConf[t.g]) byConf[t.g] = [];
     byConf[t.g].push(t);
@@ -1799,31 +1854,34 @@ function renderTeams(q) {
   Object.keys(byConf).forEach(conf => {
     html += `<div class="conf-label">${escapeHtml(conf)}</div>`;
     byConf[conf].forEach(t => {
-      let owned = 0;
-      for (let i = t.start; i <= t.end; i++) if (state.owned[i]) owned++;
+      const owned = t.ids.filter(id => state.owned[id]).length;
       const isOpen = openTeams.has(t.n);
-      const pct = Math.round(owned / 19 * 100);
-      const completeClass = (owned === 19) ? ' complete' : '';
+      const pct = Math.round(owned / STICKERS_PER_TEAM * 100);
+      const completeClass = (owned === STICKERS_PER_TEAM) ? ' complete' : '';
       const openClass = isOpen ? ' open' : '';
       html += `<div class="team-card${completeClass}${openClass}">
         <div class="team-head" onclick="toggleTeam('${escapeAttr(t.n)}')">
           <div class="team-flag" style="background:${t.c};"></div>
           <div class="team-info">
-            <div class="team-name">${escapeHtml(t.n)} <span class="check">●</span></div>
+            <div class="team-name">
+              ${escapeHtml(t.n)}
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink-faint);font-weight:500;letter-spacing:1px;">${t.code}</span>
+              <span class="check">●</span>
+            </div>
             <div class="team-bar"><div class="team-bar-fill" style="width:${pct}%"></div></div>
           </div>
-          <div class="team-count"><strong>${owned}</strong>/19</div>
+          <div class="team-count"><strong>${owned}</strong>/${STICKERS_PER_TEAM}</div>
           <div class="team-actions">
             <button class="mini-btn" onclick="markTeamAll('${escapeAttr(t.n)}',event)">Todas</button>
           </div>
           <span class="chevron">▶</span>
         </div>
         <div class="team-body">
-          <div class="sticker-section-label">Escudo</div>
-          <div class="sticker-grid">${stickerHTML(t.start, {shield: true})}</div>
-          <div class="sticker-section-label">Jugadores · ${t.start + 1}–${t.end}</div>
+          <div class="sticker-section-label">Escudo · ${t.code}1</div>
+          <div class="sticker-grid">${stickerHTML(t.ids[0], {shield: true, numOnly: 1})}</div>
+          <div class="sticker-section-label">Jugadores · ${t.code}2 — ${t.code}${STICKERS_PER_TEAM}</div>
           <div class="sticker-grid">${
-            Array.from({length: 18}, (_,i) => stickerHTML(t.start + 1 + i)).join('')
+            t.ids.slice(1).map((id, i) => stickerHTML(id, {numOnly: i + 2})).join('')
           }</div>
         </div>
       </div>`;
@@ -1834,22 +1892,57 @@ function renderTeams(q) {
 }
 
 function renderNumbers(q) {
-  let html = '<div class="numbers-grid">';
-  let any = false;
-  for (let n = 1; n <= TOTAL; n++) {
-    if (q && !String(n).includes(q)) continue;
-    any = true;
-    html += stickerHTML(n);
+  // Genera lista plana de todos los IDs ordenados: especiales primero, luego equipos
+  const allIds = [];
+  specials.forEach(s => allIds.push(...s.ids));
+  teams.forEach(t => allIds.push(...t.ids));
+
+  const filtered = q ? allIds.filter(id => id.toLowerCase().includes(q)) : allIds;
+
+  if (filtered.length === 0) {
+    return '<div class="empty">Sin resultados</div>';
   }
-  html += '</div>';
-  return any ? html : '<div class="empty">Sin resultados</div>';
+
+  // Agrupar por código (FWC, ARG, BRA, ...) para que se vean los bloques
+  const byPrefix = {};
+  filtered.forEach(id => {
+    const m = id.match(/^([A-Z]*)(\d+)$/);
+    if (!m) return;
+    const prefix = m[1]; // puede ser string vacío (ej: lámina "00")
+    if (!byPrefix[prefix]) byPrefix[prefix] = [];
+    byPrefix[prefix].push({ id, num: parseInt(m[2], 10) });
+  });
+
+  let html = '';
+  Object.keys(byPrefix).forEach(prefix => {
+    const items = byPrefix[prefix].sort((a, b) => a.num - b.num);
+    // Buscar nombre amigable
+    let label = prefix || 'Especial';
+    const t = teams.find(x => x.code === prefix);
+    if (t) label = `${t.n} · ${prefix}`;
+    else {
+      const sp = specials.find(x => x.prefix === prefix);
+      if (sp) label = sp.title;
+    }
+    const isSpecial = specials.some(x => x.prefix === prefix);
+    html += `<div class="conf-label" style="margin-top:18px;">${escapeHtml(label)}</div>`;
+    html += '<div class="numbers-grid">';
+    items.forEach(({ id, num }) => {
+      // Para lámina 00 mostramos "00" en vez de solo "0"
+      const displayLabel = id;
+      html += stickerHTML(id, { showFull: true, special: isSpecial });
+    });
+    html += '</div>';
+  });
+
+  return html;
 }
 
 function renderTrades(q) {
-  const dupeNums = Object.keys(state.dupes).map(Number).sort((a,b)=>a-b);
-  const filtered = q ? dupeNums.filter(n => String(n).includes(q)) : dupeNums;
+  const dupeIds = Object.keys(state.dupes).sort();
+  const filtered = q ? dupeIds.filter(id => id.toLowerCase().includes(q)) : dupeIds;
 
-  if (dupeNums.length === 0) {
+  if (dupeIds.length === 0) {
     return `<div class="trades-empty">
       <div class="trades-empty-num">0</div>
       <div class="trades-empty-text">Aún no registraste repes.</div>
@@ -1862,24 +1955,29 @@ function renderTrades(q) {
   }
 
   let html = '<div class="trades-grid">';
-  filtered.forEach(n => {
+  filtered.forEach(id => {
     let label = '';
-    const t = teams.find(x => n >= x.start && n <= x.end);
-    if (t) {
-      label = t.n + (n === t.start ? ' · escudo' : '');
-    } else {
-      const sp = specials.find(x => n >= x.start && n <= x.end);
-      if (sp) label = sp.title;
+    const m = id.match(/^([A-Z]*)(\d+)$/);
+    if (m) {
+      const prefix = m[1];
+      const num = parseInt(m[2], 10);
+      const t = teams.find(x => x.code === prefix);
+      if (t) {
+        label = t.n + (num === 1 ? ' · escudo' : '');
+      } else {
+        const sp = specials.find(x => x.prefix === prefix);
+        if (sp) label = sp.title;
+      }
     }
     html += `<div class="trade-item">
       <div class="trade-item-head">
-        <span class="trade-num">#${n}</span>
-        <span class="trade-count">×${state.dupes[n]}</span>
+        <span class="trade-num">${id}</span>
+        <span class="trade-count">×${state.dupes[id]}</span>
       </div>
       <div class="trade-label">${escapeHtml(label)}</div>
       <div class="trade-controls">
-        <button onclick="removeDupe(${n})">−1</button>
-        <button onclick="addDupe(${n})">+1</button>
+        <button onclick="removeDupe('${id}')">−1</button>
+        <button onclick="addDupe('${id}')">+1</button>
       </div>
     </div>`;
   });
@@ -1988,19 +2086,21 @@ window.viewFamilyMember = async function(code) {
     if (!data) { showToast('No se pudo cargar'); return; }
     const owned = data.owned || {};
     const myMissing = [];
+    // Recorrer especiales y equipos
+    specials.forEach(s => {
+      const ids = s.ids.filter(id => !state.owned[id] && owned[id]);
+      if (ids.length) myMissing.push({ team: s.title, ids });
+    });
     teams.forEach(t => {
-      const teamMissing = [];
-      for (let i = t.start; i <= t.end; i++) {
-        if (!state.owned[i] && owned[i]) teamMissing.push(i);
-      }
-      if (teamMissing.length) myMissing.push({ team: t.n, nums: teamMissing });
+      const ids = t.ids.filter(id => !state.owned[id] && owned[id]);
+      if (ids.length) myMissing.push({ team: t.n, ids });
     });
 
     let body = `<p>Láminas que <strong>${escapeHtml(code)}</strong> tiene y vos no:</p>`;
     if (myMissing.length === 0) {
       body += '<p style="color:var(--ink-dim);">No hay láminas que te puedan completar.</p>';
     } else {
-      body += '<pre>' + myMissing.map(m => `${m.team}: ${m.nums.join(', ')}`).join('\n') + '</pre>';
+      body += '<pre>' + myMissing.map(m => `${m.team}: ${m.ids.join(', ')}`).join('\n') + '</pre>';
     }
 
     showModal({
