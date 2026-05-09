@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a0e1a">
+<title>Mi Álbum · Mundial 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Archivo:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --bg-2: #111826;
+    --bg-3: #1a2436;
+    --ink: #f5f1e8;
+    --ink-dim: #8b94a8;
+    --ink-faint: #4a5267;
+    --line: #1f2a3d;
+    --line-strong: #2d3a52;
+    --accent: #d4ff3a;
+    --accent-warm: #ff5722;
+    --accent-cool: #00d9ff;
+    --gold: #ffb800;
+    --owned: #d4ff3a;
+    --owned-bg: rgba(212, 255, 58, 0.08);
+    --dupe: #ff5722;
+    --radius: 4px;
+    --radius-lg: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Archivo', sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  body {
+    background:
+      radial-gradient(ellipse at top right, rgba(212, 255, 58, 0.03), transparent 50%),
+      radial-gradient(ellipse at bottom left, rgba(255, 87, 34, 0.04), transparent 60%),
+      var(--bg);
+    min-height: 100vh;
+    padding-bottom: 80px;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(10, 14, 26, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .brand-mark {
+    width: 38px;
+    height: 38px;
+    background: var(--accent);
+    color: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    flex-shrink: 0;
+    transform: rotate(-3deg);
+    border-radius: 2px;
+  }
+
+  .brand-text {
+    min-width: 0;
+  }
+
+  .brand-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 1px;
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .brand-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 6px;
+  }
+
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    color: var(--ink-dim);
+    border-radius: var(--radius);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    transition: all 0.15s ease;
+  }
+
+  .icon-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* ===== MAIN ===== */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 20px;
+  }
+
+  /* ===== HERO STATS ===== */
+  .hero {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 28px 24px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: 'FIFA 26';
+    position: absolute;
+    top: -10px;
+    right: -20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 180px;
+    color: var(--bg-3);
+    line-height: 0.85;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .hero-progress-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 80px;
+    line-height: 0.9;
+    letter-spacing: -1px;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+
+  .hero-progress-num .total {
+    color: var(--ink-faint);
+    font-size: 36px;
+    margin-left: 8px;
+  }
+
+  .hero-progress-pct {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+
+  .hero-bar {
+    height: 4px;
+    background: var(--bg-3);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .hero-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--gold));
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 12px rgba(212, 255, 58, 0.4);
+  }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .hero-stat {
+    border-left: 2px solid var(--line-strong);
+    padding-left: 12px;
+  }
+
+  .hero-stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  .hero-stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+  }
+
+  .hero-stat.missing { border-color: var(--accent-cool); }
+  .hero-stat.missing .hero-stat-num { color: var(--accent-cool); }
+  .hero-stat.dupes { border-color: var(--accent-warm); }
+  .hero-stat.dupes .hero-stat-num { color: var(--accent-warm); }
+
+  /* ===== TABS ===== */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .tabs::-webkit-scrollbar { display: none; }
+
+  .tab {
+    background: transparent;
+    border: none;
+    color: var(--ink-dim);
+    font-family: 'Archivo', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 12px 16px;
+    cursor: pointer;
+    position: relative;
+    white-space: nowrap;
+    transition: color 0.15s ease;
+  }
+
+  .tab:hover { color: var(--ink); }
+
+  .tab.active {
+    color: var(--accent);
+  }
+
+  .tab.active::after {
+    content: '';
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: -1px;
+    height: 2px;
+    background: var(--accent);
+  }
+
+  /* ===== SEARCH ===== */
+  .search-wrap {
+    margin-bottom: 20px;
+    position: relative;
+  }
+
+  .search {
+    width: 100%;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    color: var(--ink);
+    font-family: 'Archivo', sans-serif;
+    font-size: 14px;
+    padding: 12px 16px 12px 40px;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+
+  .search:focus { border-color: var(--accent); }
+
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ink-dim);
+    font-size: 14px;
+    pointer-events: none;
+  }
+
+  /* ===== TEAM CARDS ===== */
+  .conf-label {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    margin: 24px 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .conf-label::before,
+  .conf-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .team-card {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    margin-bottom: 8px;
+    overflow: hidden;
+    transition: border-color 0.15s ease;
+  }
+
+  .team-card:hover { border-color: var(--line-strong); }
+
+  .team-card.complete {
+    border-color: var(--accent);
+    background: linear-gradient(180deg, rgba(212, 255, 58, 0.04), var(--bg-2));
+  }
+
+  .team-head {
+    padding: 14px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    user-select: none;
+  }
+
+  .team-flag {
+    width: 6px;
+    height: 36px;
+    border-radius: 1px;
+    flex-shrink: 0;
+  }
+
+  .team-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .team-name {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.3px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .team-name .check {
+    display: none;
+    color: var(--accent);
+    font-size: 12px;
+  }
+
+  .team-card.complete .team-name .check { display: inline; }
+
+  .team-bar {
+    height: 3px;
+    background: var(--bg-3);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .team-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.3s ease;
+  }
+
+  .team-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-dim);
+    min-width: 50px;
+    text-align: right;
+  }
+
+  .team-count strong {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  .team-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .mini-btn {
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    color: var(--ink-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 6px 10px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .mini-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  .chevron {
+    color: var(--ink-faint);
+    font-size: 12px;
+    transition: transform 0.2s ease;
+  }
+
+  .team-card.open .chevron { transform: rotate(90deg); }
+
+  .team-body {
+    display: none;
+    padding: 4px 16px 16px;
+    background: var(--bg);
+    border-top: 1px solid var(--line);
+  }
+
+  .team-card.open .team-body { display: block; }
+
+  .sticker-section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--ink-faint);
+    text-transform: uppercase;
+    margin: 12px 0 8px;
+  }
+
+  /* ===== STICKER GRID ===== */
+  .sticker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+    gap: 6px;
+  }
+
+  .sticker-grid.dense {
+    grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+  }
+
+  .sticker {
+    aspect-ratio: 3 / 4;
+    background: var(--bg-2);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius);
+    color: var(--ink-faint);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.12s ease;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .sticker:hover {
+    border-color: var(--ink-dim);
+    color: var(--ink-dim);
+    transform: translateY(-1px);
+  }
+
+  .sticker.owned {
+    background: var(--owned-bg);
+    border: 1px solid var(--owned);
+    border-style: solid;
+    color: var(--owned);
+    box-shadow: inset 0 0 0 1px rgba(212, 255, 58, 0.2);
+  }
+
+  .sticker.owned:hover {
+    background: rgba(212, 255, 58, 0.15);
+  }
+
+  .sticker.shield {
+    background: linear-gradient(135deg, var(--bg-2), var(--bg-3));
+    border-color: var(--ink-faint);
+  }
+
+  .sticker.shield.owned {
+    background: linear-gradient(135deg, var(--owned-bg), rgba(212, 255, 58, 0.15));
+    border-color: var(--owned);
+  }
+
+  .sticker.special {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(255, 184, 0, 0.04);
+  }
+
+  .sticker.special.owned {
+    background: rgba(255, 184, 0, 0.15);
+    color: var(--gold);
+    border-color: var(--gold);
+    box-shadow: inset 0 0 0 1px rgba(255, 184, 0, 0.3);
+  }
+
+  .dupe-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--accent-warm);
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    border-radius: 999px;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+    line-height: 1;
+    box-shadow: 0 0 0 2px var(--bg-2);
+  }
+
+  /* ===== SPECIALS SECTION ===== */
+  .special-card {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+
+  .special-card.gold {
+    border-color: rgba(255, 184, 0, 0.3);
+    background: linear-gradient(180deg, rgba(255, 184, 0, 0.03), var(--bg-2));
+  }
+
+  /* ===== TRADES ===== */
+  .trades-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--ink-dim);
+  }
+
+  .trades-empty-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    color: var(--ink-faint);
+    margin-bottom: 8px;
+  }
+
+  .trades-empty-text {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .trades-empty-hint {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin-top: 16px;
+    padding: 12px;
+    background: var(--bg-2);
+    border-radius: var(--radius);
+    display: inline-block;
+  }
+
+  .trades-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 10px;
+  }
+
+  .trade-item {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .trade-item-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .trade-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  .trade-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent-warm);
+  }
+
+  .trade-label {
+    font-size: 11px;
+    color: var(--ink-dim);
+    line-height: 1.3;
+    min-height: 28px;
+  }
+
+  .trade-controls {
+    display: flex;
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  .trade-controls button {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--line-strong);
+    color: var(--ink-dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 0;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.12s ease;
+  }
+
+  .trade-controls button:hover {
+    border-color: var(--accent-warm);
+    color: var(--accent-warm);
+  }
+
+  .trades-summary {
+    margin-top: 16px;
+    padding: 14px;
+    background: var(--bg-2);
+    border-radius: var(--radius);
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+  }
+
+  /* ===== NUMBERS VIEW ===== */
+  .numbers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+    gap: 6px;
+  }
+
+  /* ===== EMPTY ===== */
+  .empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--ink-dim);
+    font-size: 14px;
+  }
+
+  /* ===== TOAST ===== */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--accent);
+    color: var(--bg);
+    padding: 12px 20px;
+    border-radius: var(--radius);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    z-index: 100;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    max-width: 90vw;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ===== MODAL ===== */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-backdrop.show { display: flex; }
+
+  .modal {
+    background: var(--bg-2);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-lg);
+    max-width: 480px;
+    width: 100%;
+    max-height: 80vh;
+    overflow: auto;
+    padding: 24px;
+  }
+
+  .modal h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .modal p {
+    font-size: 14px;
+    color: var(--ink-dim);
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+
+  .modal pre {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink);
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 300px;
+    overflow: auto;
+    margin-bottom: 16px;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+
+  .btn {
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    color: var(--ink);
+    font-family: 'Archivo', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .btn.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+  }
+
+  .btn.primary:hover {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--bg);
+  }
+
+  .btn.danger:hover { border-color: var(--accent-warm); color: var(--accent-warm); }
+
+  /* ===== FOOTER NOTE ===== */
+  .footer-note {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    color: var(--ink-faint);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 540px) {
+    .container { padding: 16px; }
+    .hero { padding: 20px 18px; }
+    .hero::before { font-size: 120px; }
+    .hero-progress-num { font-size: 60px; }
+    .hero-progress-num .total { font-size: 26px; }
+    .hero-stats { gap: 12px; }
+    .hero-stat-num { font-size: 22px; }
+    .sticker-grid, .numbers-grid {
+      grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    }
+    .team-head { padding: 12px 14px; gap: 10px; }
+    .mini-btn { padding: 5px 8px; font-size: 9px; }
+  }
+
+  @media (min-width: 768px) {
+    .sticker-grid {
+      grid-template-columns: repeat(auto-fill, minmax(54px, 1fr));
+    }
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-mark">26</div>
+      <div class="brand-text">
+        <div class="brand-title">MI ÁLBUM</div>
+        <div class="brand-sub">FIFA World Cup · Panini</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" onclick="exportData()" title="Exportar / compartir">↗</button>
+      <button class="icon-btn" onclick="importData()" title="Importar">↙</button>
+      <button class="icon-btn" onclick="confirmReset()" title="Reset">⟲</button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-label">Progreso del álbum</div>
+      <div class="hero-progress-num">
+        <span id="num-owned">0</span><span class="total">/980</span>
+      </div>
+      <div class="hero-progress-pct" id="num-pct">0% completado</div>
+      <div class="hero-bar"><div class="hero-bar-fill" id="bar-fill" style="width:0%"></div></div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-num" id="num-owned-2">0</div>
+          <div class="hero-stat-label">Tenidas</div>
+        </div>
+        <div class="hero-stat missing">
+          <div class="hero-stat-num" id="num-missing">980</div>
+          <div class="hero-stat-label">Faltan</div>
+        </div>
+        <div class="hero-stat dupes">
+          <div class="hero-stat-num" id="num-dupes">0</div>
+          <div class="hero-stat-label">Repes</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="teams" onclick="setTab('teams')">Selecciones</button>
+    <button class="tab" data-tab="numbers" onclick="setTab('numbers')">Por número</button>
+    <button class="tab" data-tab="trades" onclick="setTab('trades')">Repes</button>
+  </nav>
+
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input id="search" class="search" type="text" placeholder="Buscar selección, confederación o número…" />
+  </div>
+
+  <div id="content"></div>
+
+  <div class="footer-note">
+    Click = tenida · Click derecho / mantener = +1 repe · Datos guardados en este dispositivo
+  </div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-backdrop" id="modal">
+  <div class="modal" id="modal-content"></div>
+</div>
+
+<script>
+// ===================== DATA =====================
+const teams = [
+  // Anfitriones
+  {n:"Canadá", g:"Anfitriones", c:"#dc2626"},
+  {n:"México", g:"Anfitriones", c:"#16a34a"},
+  {n:"Estados Unidos", g:"Anfitriones", c:"#2563eb"},
+  // CONMEBOL
+  {n:"Argentina", g:"CONMEBOL", c:"#60a5fa"},
+  {n:"Brasil", g:"CONMEBOL", c:"#facc15"},
+  {n:"Uruguay", g:"CONMEBOL", c:"#1e40af"},
+  {n:"Colombia", g:"CONMEBOL", c:"#fbbf24"},
+  {n:"Ecuador", g:"CONMEBOL", c:"#fbbf24"},
+  {n:"Paraguay", g:"CONMEBOL", c:"#dc2626"},
+  // UEFA
+  {n:"Alemania", g:"UEFA", c:"#1f2937"},
+  {n:"Francia", g:"UEFA", c:"#2563eb"},
+  {n:"España", g:"UEFA", c:"#dc2626"},
+  {n:"Inglaterra", g:"UEFA", c:"#dc2626"},
+  {n:"Portugal", g:"UEFA", c:"#16a34a"},
+  {n:"Países Bajos", g:"UEFA", c:"#ea580c"},
+  {n:"Bélgica", g:"UEFA", c:"#dc2626"},
+  {n:"Croacia", g:"UEFA", c:"#dc2626"},
+  {n:"Italia", g:"UEFA", c:"#1d4ed8"},
+  {n:"Suiza", g:"UEFA", c:"#dc2626"},
+  {n:"Austria", g:"UEFA", c:"#dc2626"},
+  {n:"Dinamarca", g:"UEFA", c:"#dc2626"},
+  {n:"Noruega", g:"UEFA", c:"#dc2626"},
+  {n:"Escocia", g:"UEFA", c:"#1d4ed8"},
+  {n:"Turquía", g:"UEFA", c:"#dc2626"},
+  {n:"Polonia", g:"UEFA", c:"#dc2626"},
+  {n:"Chequia", g:"UEFA", c:"#1d4ed8"},
+  // CONCACAF
+  {n:"Costa Rica", g:"CONCACAF", c:"#dc2626"},
+  {n:"Panamá", g:"CONCACAF", c:"#dc2626"},
+  {n:"Jamaica", g:"CONCACAF", c:"#16a34a"},
+  {n:"Honduras", g:"CONCACAF", c:"#1d4ed8"},
+  // CAF
+  {n:"Marruecos", g:"CAF", c:"#dc2626"},
+  {n:"Senegal", g:"CAF", c:"#16a34a"},
+  {n:"Egipto", g:"CAF", c:"#dc2626"},
+  {n:"Argelia", g:"CAF", c:"#16a34a"},
+  {n:"Túnez", g:"CAF", c:"#dc2626"},
+  {n:"Nigeria", g:"CAF", c:"#16a34a"},
+  {n:"Costa de Marfil", g:"CAF", c:"#ea580c"},
+  {n:"Ghana", g:"CAF", c:"#dc2626"},
+  {n:"Sudáfrica", g:"CAF", c:"#16a34a"},
+  {n:"Camerún", g:"CAF", c:"#16a34a"},
+  // AFC
+  {n:"Japón", g:"AFC", c:"#1d4ed8"},
+  {n:"Corea del Sur", g:"AFC", c:"#dc2626"},
+  {n:"Irán", g:"AFC", c:"#16a34a"},
+  {n:"Australia", g:"AFC", c:"#facc15"},
+  {n:"Arabia Saudita", g:"AFC", c:"#16a34a"},
+  {n:"Catar", g:"AFC", c:"#7c2d12"},
+  {n:"Uzbekistán", g:"AFC", c:"#0d9488"},
+  // OFC
+  {n:"Nueva Zelanda", g:"OFC", c:"#374151"}
+];
+
+let cursor = 20;
+teams.forEach(t => { t.start = cursor; t.end = cursor + 18; cursor += 19; });
+
+const specials = [
+  {title:"Intro & FIFA World Cup", start:1, end:9, gold:true},
+  {title:"Mascota & estadios", start:10, end:19, gold:false},
+  {title:"Leyendas del Mundial", start:932, end:955, gold:true},
+  {title:"Momentos históricos", start:956, end:980, gold:false}
+];
+
+const TOTAL = 980;
+const STORAGE_KEY = "panini_mundial_2026_v1";
+
+// ===================== STATE =====================
+let state = { owned: {}, dupes: {} };
+let currentTab = "teams";
+let openTeams = new Set();
+
+// ===================== STORAGE =====================
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      state.owned = parsed.owned || {};
+      state.dupes = parsed.dupes || {};
+    }
+  } catch(e) { console.warn("load failed", e); }
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch(e) { console.warn("save failed", e); }
+}
+
+// ===================== ACTIONS =====================
+function toggleOwned(n) {
+  if (state.owned[n]) {
+    delete state.owned[n];
+    delete state.dupes[n];
+  } else {
+    state.owned[n] = true;
+  }
+  saveState();
+  render();
+  updateStats();
+}
+
+function addDupe(n, ev) {
+  if (ev) ev.preventDefault();
+  if (!state.owned[n]) {
+    state.owned[n] = true;
+    showToast(`#${n} marcada como tenida`);
+  } else {
+    state.dupes[n] = (state.dupes[n] || 0) + 1;
+    showToast(`#${n} +1 repe (×${state.dupes[n]})`);
+  }
+  saveState();
+  render();
+  updateStats();
+  return false;
+}
+
+function removeDupe(n) {
+  if (state.dupes[n] > 0) {
+    state.dupes[n]--;
+    if (state.dupes[n] === 0) delete state.dupes[n];
+  }
+  saveState();
+  render();
+  updateStats();
+}
+
+function setTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === tab);
+  });
+  render();
+}
+
+function toggleTeam(name) {
+  if (openTeams.has(name)) openTeams.delete(name);
+  else openTeams.add(name);
+  render();
+}
+
+function markTeamAll(name, ev) {
+  ev.stopPropagation();
+  const t = teams.find(x => x.n === name);
+  if (!t) return;
+  let allOwned = true;
+  for (let i = t.start; i <= t.end; i++) {
+    if (!state.owned[i]) { allOwned = false; break; }
+  }
+  for (let i = t.start; i <= t.end; i++) {
+    if (allOwned) delete state.owned[i];
+    else state.owned[i] = true;
+  }
+  saveState();
+  render();
+  updateStats();
+  showToast(allOwned ? `${name}: desmarcadas` : `${name}: completa`);
+}
+
+function confirmReset() {
+  showModal({
+    title: "Borrar todo",
+    body: "¿Seguro que querés borrar todo el progreso? Esta acción no se puede deshacer.",
+    actions: [
+      { label: "Cancelar", onClick: hideModal },
+      { label: "Borrar", danger: true, onClick: () => {
+        state = { owned: {}, dupes: {} };
+        saveState();
+        render();
+        updateStats();
+        hideModal();
+        showToast("Reset completo");
+      }}
+    ]
+  });
+}
+
+function exportData() {
+  const lines = [];
+  lines.push("══════════════════════════════════");
+  lines.push("  MI ÁLBUM PANINI · MUNDIAL 2026");
+  lines.push("══════════════════════════════════");
+  lines.push("");
+  const owned = Object.keys(state.owned).length;
+  const dupes = Object.values(state.dupes).reduce((a,b)=>a+b,0);
+  lines.push(`Tenidas:   ${owned} / ${TOTAL} (${Math.round(owned/TOTAL*100)}%)`);
+  lines.push(`Faltan:    ${TOTAL - owned}`);
+  lines.push(`Repes:     ${dupes}`);
+  lines.push("");
+  lines.push("─── FALTANTES POR SELECCIÓN ───");
+  teams.forEach(t => {
+    const missing = [];
+    for (let i = t.start; i <= t.end; i++) if (!state.owned[i]) missing.push(i);
+    if (missing.length) lines.push(`${t.n} (${missing.length}): ${missing.join(", ")}`);
+  });
+  lines.push("");
+  lines.push("─── REPES PARA INTERCAMBIAR ───");
+  const dupeNums = Object.keys(state.dupes).map(Number).sort((a,b)=>a-b);
+  if (dupeNums.length === 0) lines.push("(ninguna)");
+  else dupeNums.forEach(n => lines.push(`#${n} ×${state.dupes[n]}`));
+  lines.push("");
+  const text = lines.join("\n");
+
+  const data = JSON.stringify(state);
+
+  showModal({
+    title: "Exportar",
+    body: "Copiá el listado para compartir, o guardá el código de respaldo para importar en otro dispositivo.",
+    custom: `<pre>${text.replace(/</g, '&lt;')}</pre>
+      <p style="margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-dim);">Código de respaldo</p>
+      <pre style="font-size:10px;max-height:80px;">${data}</pre>`,
+    actions: [
+      { label: "Copiar listado", primary: true, onClick: () => copyText(text, "Listado copiado") },
+      { label: "Copiar respaldo", onClick: () => copyText(data, "Respaldo copiado") },
+      { label: "Cerrar", onClick: hideModal }
+    ]
+  });
+}
+
+function copyText(text, msg) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => showToast(msg))
+      .catch(() => fallbackCopy(text, msg));
+  } else {
+    fallbackCopy(text, msg);
+  }
+}
+
+function fallbackCopy(text, msg) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.position = 'fixed';
+  ta.style.opacity = '0';
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand('copy'); showToast(msg); } catch(e) {}
+  document.body.removeChild(ta);
+}
+
+function importData() {
+  showModal({
+    title: "Importar respaldo",
+    body: "Pegá el código de respaldo que copiaste antes. Esto reemplazará tu progreso actual.",
+    custom: `<textarea id="import-text" rows="6" style="width:100%;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:10px;color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:11px;resize:vertical;"></textarea>`,
+    actions: [
+      { label: "Cancelar", onClick: hideModal },
+      { label: "Importar", primary: true, onClick: () => {
+        const txt = document.getElementById('import-text').value.trim();
+        try {
+          const parsed = JSON.parse(txt);
+          if (typeof parsed === 'object' && parsed.owned !== undefined) {
+            state.owned = parsed.owned || {};
+            state.dupes = parsed.dupes || {};
+            saveState();
+            render();
+            updateStats();
+            hideModal();
+            showToast("Respaldo importado");
+          } else throw new Error("formato inválido");
+        } catch(e) {
+          showToast("Código inválido");
+        }
+      }}
+    ]
+  });
+}
+
+// ===================== UI =====================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function showModal({ title, body, custom, actions }) {
+  const c = document.getElementById('modal-content');
+  let actionsHtml = (actions || []).map((a, i) => {
+    const cls = a.primary ? 'btn primary' : (a.danger ? 'btn danger' : 'btn');
+    return `<button class="${cls}" data-action="${i}">${a.label}</button>`;
+  }).join('');
+  c.innerHTML = `
+    <h2>${title}</h2>
+    ${body ? `<p>${body}</p>` : ''}
+    ${custom || ''}
+    <div class="modal-actions">${actionsHtml}</div>
+  `;
+  c.querySelectorAll('[data-action]').forEach(btn => {
+    const idx = +btn.dataset.action;
+    btn.addEventListener('click', actions[idx].onClick);
+  });
+  document.getElementById('modal').classList.add('show');
+}
+
+function hideModal() {
+  document.getElementById('modal').classList.remove('show');
+}
+
+document.getElementById('modal').addEventListener('click', (e) => {
+  if (e.target.id === 'modal') hideModal();
+});
+
+// ===================== STATS =====================
+function updateStats() {
+  const owned = Object.keys(state.owned).length;
+  const dupes = Object.values(state.dupes).reduce((a,b)=>a+b,0);
+  const pct = Math.round((owned / TOTAL) * 100);
+  document.getElementById('num-owned').textContent = owned;
+  document.getElementById('num-owned-2').textContent = owned;
+  document.getElementById('num-missing').textContent = TOTAL - owned;
+  document.getElementById('num-dupes').textContent = dupes;
+  document.getElementById('num-pct').textContent = `${pct}% completado`;
+  document.getElementById('bar-fill').style.width = `${pct}%`;
+}
+
+// ===================== RENDER =====================
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[c]);
+}
+
+function escapeAttr(s) {
+  return String(s).replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+}
+
+function stickerHTML(n, opts = {}) {
+  const owned = !!state.owned[n];
+  const dupes = state.dupes[n] || 0;
+  const cls = ['sticker'];
+  if (owned) cls.push('owned');
+  if (opts.shield) cls.push('shield');
+  if (opts.special) cls.push('special');
+  return `<button class="${cls.join(' ')}"
+    onclick="toggleOwned(${n})"
+    oncontextmenu="return addDupe(${n},event)"
+    ontouchstart="startTouch(${n})"
+    ontouchend="endTouch(event)"
+    ontouchmove="endTouch(event)"
+    title="Click: tenida · Mantener: +repe">
+    ${n}
+    ${dupes > 0 ? `<span class="dupe-badge">+${dupes}</span>` : ''}
+  </button>`;
+}
+
+// Long-press handler para mobile
+let touchTimer = null;
+let touchedN = null;
+window.startTouch = function(n) {
+  touchedN = n;
+  touchTimer = setTimeout(() => {
+    if (touchedN === n) {
+      addDupe(n);
+      touchedN = null;
+      // suprimir el siguiente click
+      window._suppressClick = true;
+      setTimeout(() => { window._suppressClick = false; }, 400);
+    }
+  }, 500);
+};
+window.endTouch = function(e) {
+  if (touchTimer) { clearTimeout(touchTimer); touchTimer = null; }
+  touchedN = null;
+};
+
+// Interceptar clicks suprimidos
+document.addEventListener('click', (e) => {
+  if (window._suppressClick && e.target.closest('.sticker')) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+}, true);
+
+function render() {
+  const q = (document.getElementById('search').value || '').toLowerCase().trim();
+  const c = document.getElementById('content');
+  if (currentTab === 'teams') c.innerHTML = renderTeams(q);
+  else if (currentTab === 'numbers') c.innerHTML = renderNumbers(q);
+  else c.innerHTML = renderTrades(q);
+}
+
+function renderTeams(q) {
+  let html = '';
+
+  // Especiales
+  const specialsMatch = specials.filter(s =>
+    !q || s.title.toLowerCase().includes(q) ||
+    Array.from({length: s.end - s.start + 1}, (_,i) => String(s.start + i)).some(n => n.includes(q))
+  );
+
+  if (specialsMatch.length) {
+    html += `<div class="conf-label">Especiales</div>`;
+    specialsMatch.forEach(s => {
+      let owned = 0;
+      for (let i = s.start; i <= s.end; i++) if (state.owned[i]) owned++;
+      const total = s.end - s.start + 1;
+      const isOpen = openTeams.has(s.title);
+      const pct = Math.round(owned / total * 100);
+      const goldClass = s.gold ? ' gold' : '';
+      const completeClass = (owned === total) ? ' complete' : '';
+      const openClass = isOpen ? ' open' : '';
+      html += `<div class="team-card special-card${goldClass}${completeClass}${openClass}">
+        <div class="team-head" onclick="toggleTeam('${escapeAttr(s.title)}')">
+          <div class="team-flag" style="background: ${s.gold ? '#ffb800' : '#00d9ff'};"></div>
+          <div class="team-info">
+            <div class="team-name">${escapeHtml(s.title)} <span class="check">●</span></div>
+            <div class="team-bar"><div class="team-bar-fill" style="width:${pct}%"></div></div>
+          </div>
+          <div class="team-count"><strong>${owned}</strong>/${total}</div>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="team-body">
+          <div class="sticker-section-label">Láminas ${s.start}–${s.end}</div>
+          <div class="sticker-grid">${
+            Array.from({length: total}, (_,i) => stickerHTML(s.start + i, {special: s.gold})).join('')
+          }</div>
+        </div>
+      </div>`;
+    });
+  }
+
+  // Equipos por confederación
+  const byConf = {};
+  teams.forEach(t => {
+    if (q) {
+      const matchName = t.n.toLowerCase().includes(q);
+      const matchConf = t.g.toLowerCase().includes(q);
+      const matchNum = Array.from({length:19}, (_,i) => String(t.start + i)).some(n => n.includes(q));
+      if (!matchName && !matchConf && !matchNum) return;
+    }
+    if (!byConf[t.g]) byConf[t.g] = [];
+    byConf[t.g].push(t);
+  });
+
+  Object.keys(byConf).forEach(conf => {
+    html += `<div class="conf-label">${escapeHtml(conf)}</div>`;
+    byConf[conf].forEach(t => {
+      let owned = 0;
+      for (let i = t.start; i <= t.end; i++) if (state.owned[i]) owned++;
+      const isOpen = openTeams.has(t.n);
+      const pct = Math.round(owned / 19 * 100);
+      const completeClass = (owned === 19) ? ' complete' : '';
+      const openClass = isOpen ? ' open' : '';
+      html += `<div class="team-card${completeClass}${openClass}">
+        <div class="team-head" onclick="toggleTeam('${escapeAttr(t.n)}')">
+          <div class="team-flag" style="background:${t.c};"></div>
+          <div class="team-info">
+            <div class="team-name">${escapeHtml(t.n)} <span class="check">●</span></div>
+            <div class="team-bar"><div class="team-bar-fill" style="width:${pct}%"></div></div>
+          </div>
+          <div class="team-count"><strong>${owned}</strong>/19</div>
+          <div class="team-actions">
+            <button class="mini-btn" onclick="markTeamAll('${escapeAttr(t.n)}',event)">Todas</button>
+          </div>
+          <span class="chevron">▶</span>
+        </div>
+        <div class="team-body">
+          <div class="sticker-section-label">Escudo</div>
+          <div class="sticker-grid">${stickerHTML(t.start, {shield: true})}</div>
+          <div class="sticker-section-label">Jugadores · ${t.start + 1}–${t.end}</div>
+          <div class="sticker-grid">${
+            Array.from({length: 18}, (_,i) => stickerHTML(t.start + 1 + i)).join('')
+          }</div>
+        </div>
+      </div>`;
+    });
+  });
+
+  return html || '<div class="empty">Sin resultados para "' + escapeHtml(q) + '"</div>';
+}
+
+function renderNumbers(q) {
+  let html = '<div class="numbers-grid">';
+  let any = false;
+  for (let n = 1; n <= TOTAL; n++) {
+    if (q && !String(n).includes(q)) continue;
+    any = true;
+    html += stickerHTML(n);
+  }
+  html += '</div>';
+  return any ? html : '<div class="empty">Sin resultados</div>';
+}
+
+function renderTrades(q) {
+  const dupeNums = Object.keys(state.dupes).map(Number).sort((a,b)=>a-b);
+  const filtered = q ? dupeNums.filter(n => String(n).includes(q)) : dupeNums;
+
+  if (dupeNums.length === 0) {
+    return `<div class="trades-empty">
+      <div class="trades-empty-num">0</div>
+      <div class="trades-empty-text">Aún no registraste repes.</div>
+      <div class="trades-empty-hint">Click derecho (PC) o mantener pulsado (móvil)<br>sobre una lámina ya tenida = +1 repe</div>
+    </div>`;
+  }
+
+  if (filtered.length === 0) {
+    return '<div class="empty">Sin repes que coincidan con "' + escapeHtml(q) + '"</div>';
+  }
+
+  let html = '<div class="trades-grid">';
+  filtered.forEach(n => {
+    let label = '';
+    const t = teams.find(x => n >= x.start && n <= x.end);
+    if (t) {
+      label = t.n + (n === t.start ? ' · escudo' : '');
+    } else {
+      const sp = specials.find(x => n >= x.start && n <= x.end);
+      if (sp) label = sp.title;
+    }
+    html += `<div class="trade-item">
+      <div class="trade-item-head">
+        <span class="trade-num">#${n}</span>
+        <span class="trade-count">×${state.dupes[n]}</span>
+      </div>
+      <div class="trade-label">${escapeHtml(label)}</div>
+      <div class="trade-controls">
+        <button onclick="removeDupe(${n})">−1</button>
+        <button onclick="addDupe(${n})">+1</button>
+      </div>
+    </div>`;
+  });
+  html += '</div>';
+
+  const totalDupes = Object.values(state.dupes).reduce((a,b)=>a+b,0);
+  html += `<div class="trades-summary">
+    ${filtered.length} láminas · ${totalDupes} repes en total
+  </div>`;
+  return html;
+}
+
+// ===================== SEARCH =====================
+let searchTimer = null;
+document.getElementById('search').addEventListener('input', () => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(render, 120);
+});
+
+// Prevenir menú contextual en stickers (móvil)
+document.addEventListener('contextmenu', (e) => {
+  if (e.target.closest('.sticker')) e.preventDefault();
+});
+
+// ===================== INIT =====================
+loadState();
+render();
+updateStats();
+</script>
+</body>
+</html>
