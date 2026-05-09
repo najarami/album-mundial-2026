@@ -50,6 +50,143 @@
     padding-bottom: 80px;
   }
 
+  /* ===== LOGIN SCREEN ===== */
+  .login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .login-card {
+    max-width: 420px;
+    width: 100%;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 32px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .login-card::before {
+    content: '26';
+    position: absolute;
+    top: -40px;
+    right: -20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 200px;
+    color: var(--bg-3);
+    line-height: 0.85;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .login-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .login-mark {
+    width: 56px;
+    height: 56px;
+    background: var(--accent);
+    color: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30px;
+    margin: 0 auto 20px;
+    transform: rotate(-3deg);
+    border-radius: 4px;
+  }
+
+  .login-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 38px;
+    letter-spacing: 1.5px;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .login-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  .login-label {
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .login-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius);
+    color: var(--ink);
+    font-family: 'Archivo', sans-serif;
+    font-size: 16px;
+    padding: 14px 16px;
+    outline: none;
+    margin-bottom: 14px;
+    transition: border-color 0.15s ease;
+  }
+
+  .login-input:focus { border-color: var(--accent); }
+
+  .login-help {
+    text-align: left;
+    font-size: 12px;
+    color: var(--ink-dim);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  .login-btn {
+    width: 100%;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'Archivo', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 14px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+
+  .login-btn:hover { background: var(--gold); }
+
+  .login-btn:disabled {
+    background: var(--line-strong);
+    color: var(--ink-faint);
+    cursor: not-allowed;
+  }
+
+  .login-error {
+    color: var(--accent-warm);
+    font-size: 12px;
+    margin-top: 12px;
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
   /* ===== HEADER ===== */
   .header {
     position: sticky;
@@ -94,9 +231,7 @@
     border-radius: 2px;
   }
 
-  .brand-text {
-    min-width: 0;
-  }
+  .brand-text { min-width: 0; }
 
   .brand-title {
     font-family: 'Bebas Neue', sans-serif;
@@ -113,12 +248,20 @@
     color: var(--ink-dim);
     text-transform: uppercase;
     margin-top: 3px;
-  }
-
-  .header-actions {
     display: flex;
+    align-items: center;
     gap: 6px;
   }
+
+  .user-pill {
+    background: var(--accent);
+    color: var(--bg);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 700;
+  }
+
+  .header-actions { display: flex; gap: 6px; }
 
   .icon-btn {
     width: 36px;
@@ -135,9 +278,48 @@
     transition: all 0.15s ease;
   }
 
-  .icon-btn:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+  .icon-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ===== SYNC INDICATOR ===== */
+  .sync-status {
+    position: fixed;
+    top: 70px;
+    right: 16px;
+    z-index: 40;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    display: none;
+    align-items: center;
+    gap: 6px;
+    transition: opacity 0.3s ease;
+  }
+
+  .sync-status.show { display: flex; }
+
+  .sync-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .sync-status.syncing .sync-dot {
+    background: var(--accent-cool);
+    animation: pulse 1s ease-in-out infinite;
+  }
+
+  .sync-status.error .sync-dot { background: var(--accent-warm); }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
   }
 
   /* ===== MAIN ===== */
@@ -171,10 +353,7 @@
     pointer-events: none;
   }
 
-  .hero-content {
-    position: relative;
-    z-index: 1;
-  }
+  .hero-content { position: relative; z-index: 1; }
 
   .hero-label {
     font-family: 'JetBrains Mono', monospace;
@@ -283,10 +462,7 @@
   }
 
   .tab:hover { color: var(--ink); }
-
-  .tab.active {
-    color: var(--accent);
-  }
+  .tab.active { color: var(--accent); }
 
   .tab.active::after {
     content: '';
@@ -342,8 +518,7 @@
     gap: 10px;
   }
 
-  .conf-label::before,
-  .conf-label::after {
+  .conf-label::before, .conf-label::after {
     content: '';
     flex: 1;
     height: 1px;
@@ -382,10 +557,7 @@
     flex-shrink: 0;
   }
 
-  .team-info {
-    flex: 1;
-    min-width: 0;
-  }
+  .team-info { flex: 1; min-width: 0; }
 
   .team-name {
     font-family: 'Archivo', sans-serif;
@@ -427,16 +599,9 @@
     text-align: right;
   }
 
-  .team-count strong {
-    color: var(--ink);
-    font-weight: 700;
-  }
+  .team-count strong { color: var(--ink); font-weight: 700; }
 
-  .team-actions {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-  }
+  .team-actions { display: flex; gap: 6px; align-items: center; }
 
   .mini-btn {
     background: transparent;
@@ -452,10 +617,7 @@
     transition: all 0.15s ease;
   }
 
-  .mini-btn:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
+  .mini-btn:hover { border-color: var(--accent); color: var(--accent); }
 
   .chevron {
     color: var(--ink-faint);
@@ -488,10 +650,6 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
     gap: 6px;
-  }
-
-  .sticker-grid.dense {
-    grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
   }
 
   .sticker {
@@ -527,9 +685,7 @@
     box-shadow: inset 0 0 0 1px rgba(212, 255, 58, 0.2);
   }
 
-  .sticker.owned:hover {
-    background: rgba(212, 255, 58, 0.15);
-  }
+  .sticker.owned:hover { background: rgba(212, 255, 58, 0.15); }
 
   .sticker.shield {
     background: linear-gradient(135deg, var(--bg-2), var(--bg-3));
@@ -574,15 +730,7 @@
     box-shadow: 0 0 0 2px var(--bg-2);
   }
 
-  /* ===== SPECIALS SECTION ===== */
-  .special-card {
-    background: var(--bg-2);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-lg);
-    margin-bottom: 8px;
-    overflow: hidden;
-  }
-
+  .special-card { background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--radius-lg); margin-bottom: 8px; overflow: hidden; }
   .special-card.gold {
     border-color: rgba(255, 184, 0, 0.3);
     background: linear-gradient(180deg, rgba(255, 184, 0, 0.03), var(--bg-2));
@@ -602,10 +750,7 @@
     margin-bottom: 8px;
   }
 
-  .trades-empty-text {
-    font-size: 14px;
-    line-height: 1.6;
-  }
+  .trades-empty-text { font-size: 14px; line-height: 1.6; }
 
   .trades-empty-hint {
     font-family: 'JetBrains Mono', monospace;
@@ -634,11 +779,7 @@
     gap: 6px;
   }
 
-  .trade-item-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-  }
+  .trade-item-head { display: flex; justify-content: space-between; align-items: baseline; }
 
   .trade-num {
     font-family: 'Bebas Neue', sans-serif;
@@ -660,11 +801,7 @@
     min-height: 28px;
   }
 
-  .trade-controls {
-    display: flex;
-    gap: 4px;
-    margin-top: 4px;
-  }
+  .trade-controls { display: flex; gap: 4px; margin-top: 4px; }
 
   .trade-controls button {
     flex: 1;
@@ -698,19 +835,122 @@
     text-transform: uppercase;
   }
 
-  /* ===== NUMBERS VIEW ===== */
   .numbers-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
     gap: 6px;
   }
 
-  /* ===== EMPTY ===== */
   .empty {
     text-align: center;
     padding: 40px 20px;
     color: var(--ink-dim);
     font-size: 14px;
+  }
+
+  /* ===== FAMILY VIEW ===== */
+  .family-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+  }
+
+  .family-card {
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+  }
+
+  .family-card.me { border-color: var(--accent); }
+
+  .family-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 12px;
+  }
+
+  .family-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1px;
+  }
+
+  .family-me-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    background: var(--accent);
+    color: var(--bg);
+    padding: 2px 6px;
+    border-radius: 3px;
+    text-transform: uppercase;
+  }
+
+  .family-pct {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .family-stat-row {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+
+  .family-bar {
+    height: 3px;
+    background: var(--bg-3);
+    border-radius: 2px;
+    overflow: hidden;
+    margin: 8px 0;
+  }
+
+  .family-bar-fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.4s ease;
+  }
+
+  .family-add-form {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .family-add-form input {
+    flex: 1;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    color: var(--ink);
+    font-family: 'Archivo', sans-serif;
+    font-size: 14px;
+    padding: 10px 14px;
+    outline: none;
+  }
+
+  .family-add-form input:focus { border-color: var(--accent); }
+
+  .family-empty {
+    background: var(--bg-2);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--radius-lg);
+    padding: 32px 20px;
+    text-align: center;
+    color: var(--ink-dim);
+    font-size: 13px;
+    margin-bottom: 16px;
+    line-height: 1.6;
   }
 
   /* ===== TOAST ===== */
@@ -735,9 +975,7 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   }
 
-  .toast.show {
-    transform: translateX(-50%) translateY(0);
-  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
 
   /* ===== MODAL ===== */
   .modal-backdrop {
@@ -795,11 +1033,7 @@
     margin-bottom: 16px;
   }
 
-  .modal-actions {
-    display: flex;
-    gap: 8px;
-    justify-content: flex-end;
-  }
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
 
   .btn {
     background: transparent;
@@ -822,15 +1056,10 @@
     color: var(--bg);
   }
 
-  .btn.primary:hover {
-    background: var(--gold);
-    border-color: var(--gold);
-    color: var(--bg);
-  }
+  .btn.primary:hover { background: var(--gold); border-color: var(--gold); color: var(--bg); }
 
   .btn.danger:hover { border-color: var(--accent-warm); color: var(--accent-warm); }
 
-  /* ===== FOOTER NOTE ===== */
   .footer-note {
     text-align: center;
     margin-top: 40px;
@@ -842,7 +1071,6 @@
     text-transform: uppercase;
   }
 
-  /* ===== RESPONSIVE ===== */
   @media (max-width: 540px) {
     .container { padding: 16px; }
     .hero { padding: 20px 18px; }
@@ -856,6 +1084,7 @@
     }
     .team-head { padding: 12px 14px; gap: 10px; }
     .mini-btn { padding: 5px 8px; font-size: 9px; }
+    .sync-status { top: auto; bottom: 16px; right: 16px; }
   }
 
   @media (min-width: 768px) {
@@ -867,90 +1096,125 @@
 </head>
 <body>
 
-<header class="header">
-  <div class="header-inner">
-    <div class="brand">
-      <div class="brand-mark">26</div>
-      <div class="brand-text">
-        <div class="brand-title">MI ÁLBUM</div>
-        <div class="brand-sub">FIFA World Cup · Panini</div>
+<!-- ===== LOGIN SCREEN ===== -->
+<div class="login-screen" id="login-screen">
+  <div class="login-card">
+    <div class="login-content">
+      <div class="login-mark">26</div>
+      <div class="login-title">MI ÁLBUM</div>
+      <div class="login-sub">FIFA World Cup · Panini</div>
+
+      <div class="login-label">Tu código de coleccionista</div>
+      <input type="text"
+             id="login-input"
+             class="login-input"
+             placeholder="ej: juan, papa, sofia..."
+             autocomplete="off"
+             autocapitalize="off"
+             autocorrect="off"
+             spellcheck="false"
+             maxlength="20" />
+      <div class="login-help">
+        Elegí un código simple. Si ya lo usaste antes, recuperás tu colección. Compartilo con tu familia para que cada uno tenga el suyo.
       </div>
-    </div>
-    <div class="header-actions">
-      <button class="icon-btn" onclick="exportData()" title="Exportar / compartir">↗</button>
-      <button class="icon-btn" onclick="importData()" title="Importar">↙</button>
-      <button class="icon-btn" onclick="confirmReset()" title="Reset">⟲</button>
+      <button class="login-btn" id="login-btn" onclick="doLogin()">Entrar</button>
+      <div class="login-error" id="login-error"></div>
     </div>
   </div>
-</header>
-
-<main class="container">
-
-  <section class="hero">
-    <div class="hero-content">
-      <div class="hero-label">Progreso del álbum</div>
-      <div class="hero-progress-num">
-        <span id="num-owned">0</span><span class="total">/980</span>
-      </div>
-      <div class="hero-progress-pct" id="num-pct">0% completado</div>
-      <div class="hero-bar"><div class="hero-bar-fill" id="bar-fill" style="width:0%"></div></div>
-      <div class="hero-stats">
-        <div class="hero-stat">
-          <div class="hero-stat-num" id="num-owned-2">0</div>
-          <div class="hero-stat-label">Tenidas</div>
-        </div>
-        <div class="hero-stat missing">
-          <div class="hero-stat-num" id="num-missing">980</div>
-          <div class="hero-stat-label">Faltan</div>
-        </div>
-        <div class="hero-stat dupes">
-          <div class="hero-stat-num" id="num-dupes">0</div>
-          <div class="hero-stat-label">Repes</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <nav class="tabs">
-    <button class="tab active" data-tab="teams" onclick="setTab('teams')">Selecciones</button>
-    <button class="tab" data-tab="numbers" onclick="setTab('numbers')">Por número</button>
-    <button class="tab" data-tab="trades" onclick="setTab('trades')">Repes</button>
-  </nav>
-
-  <div class="search-wrap">
-    <span class="search-icon">⌕</span>
-    <input id="search" class="search" type="text" placeholder="Buscar selección, confederación o número…" />
-  </div>
-
-  <div id="content"></div>
-
-  <div class="footer-note">
-    Click = tenida · Click derecho / mantener = +1 repe · Datos guardados en este dispositivo
-  </div>
-
-</main>
-
-<div class="toast" id="toast"></div>
-
-<div class="modal-backdrop" id="modal">
-  <div class="modal" id="modal-content"></div>
 </div>
 
+<!-- ===== APP ===== -->
+<div id="app" style="display:none;">
+  <header class="header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-mark">26</div>
+        <div class="brand-text">
+          <div class="brand-title">MI ÁLBUM</div>
+          <div class="brand-sub">
+            <span class="user-pill" id="user-pill">user</span>
+            <span>FIFA 26</span>
+          </div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" onclick="exportData()" title="Exportar">↗</button>
+        <button class="icon-btn" onclick="confirmReset()" title="Reset">⟲</button>
+        <button class="icon-btn" onclick="logout()" title="Cambiar usuario">⎋</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="sync-status" id="sync-status"><span class="sync-dot"></span><span id="sync-text">sincronizado</span></div>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-label">Progreso del álbum</div>
+        <div class="hero-progress-num">
+          <span id="num-owned">0</span><span class="total">/980</span>
+        </div>
+        <div class="hero-progress-pct" id="num-pct">0% completado</div>
+        <div class="hero-bar"><div class="hero-bar-fill" id="bar-fill" style="width:0%"></div></div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hero-stat-num" id="num-owned-2">0</div>
+            <div class="hero-stat-label">Tenidas</div>
+          </div>
+          <div class="hero-stat missing">
+            <div class="hero-stat-num" id="num-missing">980</div>
+            <div class="hero-stat-label">Faltan</div>
+          </div>
+          <div class="hero-stat dupes">
+            <div class="hero-stat-num" id="num-dupes">0</div>
+            <div class="hero-stat-label">Repes</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="teams" onclick="setTab('teams')">Selecciones</button>
+      <button class="tab" data-tab="numbers" onclick="setTab('numbers')">Por número</button>
+      <button class="tab" data-tab="trades" onclick="setTab('trades')">Repes</button>
+      <button class="tab" data-tab="family" onclick="setTab('family')">Familia</button>
+    </nav>
+
+    <div class="search-wrap" id="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input id="search" class="search" type="text" placeholder="Buscar selección, confederación o número…" />
+    </div>
+
+    <div id="content"></div>
+
+    <div class="footer-note">
+      Click = tenida · Click derecho / mantener = +1 repe · Datos en la nube
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="modal-backdrop" id="modal"><div class="modal" id="modal-content"></div></div>
+
 <script>
+// ===================== SUPABASE CONFIG =====================
+const SUPABASE_URL = 'https://thjnbemqxoylkwlmhdvr.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRoam5iZW1xeG95bGt3bG1oZHZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgzNTc5MjUsImV4cCI6MjA5MzkzMzkyNX0.GAK6LrQmcUAflrAP-OAytWU9k8e9fmx_7gSIKeb-H7Q';
+const TABLE = 'collections';
+const FAMILY_KEY_PREFIX = 'panini_mundial_2026_family_';
+const SESSION_KEY = 'panini_mundial_2026_user';
+
 // ===================== DATA =====================
 const teams = [
-  // Anfitriones
   {n:"Canadá", g:"Anfitriones", c:"#dc2626"},
   {n:"México", g:"Anfitriones", c:"#16a34a"},
   {n:"Estados Unidos", g:"Anfitriones", c:"#2563eb"},
-  // CONMEBOL
   {n:"Argentina", g:"CONMEBOL", c:"#60a5fa"},
   {n:"Brasil", g:"CONMEBOL", c:"#facc15"},
   {n:"Uruguay", g:"CONMEBOL", c:"#1e40af"},
   {n:"Colombia", g:"CONMEBOL", c:"#fbbf24"},
   {n:"Ecuador", g:"CONMEBOL", c:"#fbbf24"},
   {n:"Paraguay", g:"CONMEBOL", c:"#dc2626"},
-  // UEFA
   {n:"Alemania", g:"UEFA", c:"#1f2937"},
   {n:"Francia", g:"UEFA", c:"#2563eb"},
   {n:"España", g:"UEFA", c:"#dc2626"},
@@ -968,12 +1232,10 @@ const teams = [
   {n:"Turquía", g:"UEFA", c:"#dc2626"},
   {n:"Polonia", g:"UEFA", c:"#dc2626"},
   {n:"Chequia", g:"UEFA", c:"#1d4ed8"},
-  // CONCACAF
   {n:"Costa Rica", g:"CONCACAF", c:"#dc2626"},
   {n:"Panamá", g:"CONCACAF", c:"#dc2626"},
   {n:"Jamaica", g:"CONCACAF", c:"#16a34a"},
   {n:"Honduras", g:"CONCACAF", c:"#1d4ed8"},
-  // CAF
   {n:"Marruecos", g:"CAF", c:"#dc2626"},
   {n:"Senegal", g:"CAF", c:"#16a34a"},
   {n:"Egipto", g:"CAF", c:"#dc2626"},
@@ -984,7 +1246,6 @@ const teams = [
   {n:"Ghana", g:"CAF", c:"#dc2626"},
   {n:"Sudáfrica", g:"CAF", c:"#16a34a"},
   {n:"Camerún", g:"CAF", c:"#16a34a"},
-  // AFC
   {n:"Japón", g:"AFC", c:"#1d4ed8"},
   {n:"Corea del Sur", g:"AFC", c:"#dc2626"},
   {n:"Irán", g:"AFC", c:"#16a34a"},
@@ -992,7 +1253,6 @@ const teams = [
   {n:"Arabia Saudita", g:"AFC", c:"#16a34a"},
   {n:"Catar", g:"AFC", c:"#7c2d12"},
   {n:"Uzbekistán", g:"AFC", c:"#0d9488"},
-  // OFC
   {n:"Nueva Zelanda", g:"OFC", c:"#374151"}
 ];
 
@@ -1007,29 +1267,224 @@ const specials = [
 ];
 
 const TOTAL = 980;
-const STORAGE_KEY = "panini_mundial_2026_v1";
 
 // ===================== STATE =====================
+let userCode = null;
 let state = { owned: {}, dupes: {} };
 let currentTab = "teams";
 let openTeams = new Set();
+let saveTimer = null;
+let lastSavedSnapshot = null;
 
-// ===================== STORAGE =====================
-function loadState() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      state.owned = parsed.owned || {};
-      state.dupes = parsed.dupes || {};
-    }
-  } catch(e) { console.warn("load failed", e); }
+// ===================== SUPABASE CLIENT =====================
+async function supabaseRequest(method, path, body) {
+  const headers = {
+    'apikey': SUPABASE_ANON_KEY,
+    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+    'Content-Type': 'application/json'
+  };
+  if (method === 'PATCH' || method === 'POST') {
+    headers['Prefer'] = 'return=representation';
+  }
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    method, headers,
+    body: body ? JSON.stringify(body) : undefined
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Supabase ${res.status}: ${text}`);
+  }
+  if (res.status === 204) return null;
+  const text = await res.text();
+  return text ? JSON.parse(text) : null;
 }
 
-function saveState() {
+async function loadFromCloud(code) {
+  const rows = await supabaseRequest('GET', `${TABLE}?user_code=eq.${encodeURIComponent(code)}&select=data`);
+  if (rows && rows.length > 0 && rows[0].data) {
+    return rows[0].data;
+  }
+  return null;
+}
+
+async function saveToCloud(code, data) {
+  // Upsert: si existe lo actualiza, si no lo crea
+  await supabaseRequest('POST', `${TABLE}?on_conflict=user_code`, {
+    user_code: code,
+    data: data,
+    updated_at: new Date().toISOString()
+  });
+}
+
+// Necesitamos enviar un header especial para upsert
+async function upsertToCloud(code, data) {
+  const headers = {
+    'apikey': SUPABASE_ANON_KEY,
+    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+    'Content-Type': 'application/json',
+    'Prefer': 'resolution=merge-duplicates'
+  };
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      user_code: code,
+      data: data,
+      updated_at: new Date().toISOString()
+    })
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Supabase ${res.status}: ${text}`);
+  }
+}
+
+// ===================== SYNC =====================
+function setSyncStatus(status) {
+  const el = document.getElementById('sync-status');
+  const txt = document.getElementById('sync-text');
+  el.classList.remove('syncing', 'error');
+  el.classList.add('show');
+  if (status === 'syncing') {
+    el.classList.add('syncing');
+    txt.textContent = 'guardando...';
+  } else if (status === 'saved') {
+    txt.textContent = 'guardado ✓';
+    setTimeout(() => el.classList.remove('show'), 1500);
+  } else if (status === 'error') {
+    el.classList.add('error');
+    txt.textContent = 'sin conexión';
+  } else if (status === 'loading') {
+    el.classList.add('syncing');
+    txt.textContent = 'cargando...';
+  }
+}
+
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async () => {
+    const snapshot = JSON.stringify(state);
+    if (snapshot === lastSavedSnapshot) return;
+    setSyncStatus('syncing');
+    try {
+      await upsertToCloud(userCode, state);
+      lastSavedSnapshot = snapshot;
+      // Backup local también, por si acaso
+      try { localStorage.setItem(`panini_backup_${userCode}`, snapshot); } catch(e) {}
+      setSyncStatus('saved');
+    } catch (e) {
+      console.error('save failed', e);
+      setSyncStatus('error');
+      // Backup local de emergencia
+      try { localStorage.setItem(`panini_backup_${userCode}`, snapshot); } catch(e) {}
+    }
+  }, 500);
+}
+
+// ===================== LOGIN =====================
+async function doLogin() {
+  const input = document.getElementById('login-input');
+  const errEl = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+  const code = input.value.trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
+
+  errEl.textContent = '';
+  if (!code) {
+    errEl.textContent = 'Escribí un código (solo letras y números)';
+    return;
+  }
+  if (code.length < 2) {
+    errEl.textContent = 'El código debe tener al menos 2 caracteres';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Cargando...';
+
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch(e) { console.warn("save failed", e); }
+    const cloudData = await loadFromCloud(code);
+    if (cloudData) {
+      state = {
+        owned: cloudData.owned || {},
+        dupes: cloudData.dupes || {}
+      };
+    } else {
+      // Usuario nuevo, intentar restaurar backup local
+      try {
+        const backup = localStorage.getItem(`panini_backup_${code}`);
+        if (backup) state = JSON.parse(backup);
+      } catch(e) {}
+      // Crear el registro inicial
+      await upsertToCloud(code, state);
+    }
+
+    userCode = code;
+    lastSavedSnapshot = JSON.stringify(state);
+    try { localStorage.setItem(SESSION_KEY, code); } catch(e) {}
+
+    // Add to family list
+    addToFamily(code);
+
+    enterApp();
+  } catch (e) {
+    console.error(e);
+    errEl.textContent = 'Error de conexión. Probá de nuevo.';
+    btn.disabled = false;
+    btn.textContent = 'Entrar';
+  }
+}
+
+function addToFamily(code) {
+  try {
+    const list = JSON.parse(localStorage.getItem(FAMILY_KEY_PREFIX + 'list') || '[]');
+    if (!list.includes(code)) {
+      list.push(code);
+      localStorage.setItem(FAMILY_KEY_PREFIX + 'list', JSON.stringify(list));
+    }
+  } catch(e) {}
+}
+
+function getFamilyList() {
+  try {
+    return JSON.parse(localStorage.getItem(FAMILY_KEY_PREFIX + 'list') || '[]');
+  } catch(e) { return []; }
+}
+
+function removeFromFamily(code) {
+  try {
+    const list = getFamilyList().filter(c => c !== code);
+    localStorage.setItem(FAMILY_KEY_PREFIX + 'list', JSON.stringify(list));
+  } catch(e) {}
+}
+
+function enterApp() {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('user-pill').textContent = userCode;
+  render();
+  updateStats();
+}
+
+function logout() {
+  showModal({
+    title: 'Cambiar usuario',
+    body: '¿Querés cerrar la sesión actual y entrar con otro código?',
+    actions: [
+      { label: 'Cancelar', onClick: hideModal },
+      { label: 'Cambiar', primary: true, onClick: () => {
+        try { localStorage.removeItem(SESSION_KEY); } catch(e) {}
+        userCode = null;
+        state = { owned: {}, dupes: {} };
+        document.getElementById('app').style.display = 'none';
+        document.getElementById('login-screen').style.display = 'flex';
+        document.getElementById('login-input').value = '';
+        document.getElementById('login-btn').disabled = false;
+        document.getElementById('login-btn').textContent = 'Entrar';
+        document.getElementById('login-error').textContent = '';
+        hideModal();
+      }}
+    ]
+  });
 }
 
 // ===================== ACTIONS =====================
@@ -1040,7 +1495,7 @@ function toggleOwned(n) {
   } else {
     state.owned[n] = true;
   }
-  saveState();
+  scheduleSave();
   render();
   updateStats();
 }
@@ -1054,7 +1509,7 @@ function addDupe(n, ev) {
     state.dupes[n] = (state.dupes[n] || 0) + 1;
     showToast(`#${n} +1 repe (×${state.dupes[n]})`);
   }
-  saveState();
+  scheduleSave();
   render();
   updateStats();
   return false;
@@ -1065,7 +1520,7 @@ function removeDupe(n) {
     state.dupes[n]--;
     if (state.dupes[n] === 0) delete state.dupes[n];
   }
-  saveState();
+  scheduleSave();
   render();
   updateStats();
 }
@@ -1075,6 +1530,7 @@ function setTab(tab) {
   document.querySelectorAll('.tab').forEach(b => {
     b.classList.toggle('active', b.dataset.tab === tab);
   });
+  document.getElementById('search-wrap').style.display = (tab === 'family') ? 'none' : 'block';
   render();
 }
 
@@ -1096,7 +1552,7 @@ function markTeamAll(name, ev) {
     if (allOwned) delete state.owned[i];
     else state.owned[i] = true;
   }
-  saveState();
+  scheduleSave();
   render();
   updateStats();
   showToast(allOwned ? `${name}: desmarcadas` : `${name}: completa`);
@@ -1105,12 +1561,12 @@ function markTeamAll(name, ev) {
 function confirmReset() {
   showModal({
     title: "Borrar todo",
-    body: "¿Seguro que querés borrar todo el progreso? Esta acción no se puede deshacer.",
+    body: `¿Seguro que querés borrar todo el progreso de "${userCode}"? Esta acción no se puede deshacer.`,
     actions: [
       { label: "Cancelar", onClick: hideModal },
       { label: "Borrar", danger: true, onClick: () => {
         state = { owned: {}, dupes: {} };
-        saveState();
+        scheduleSave();
         render();
         updateStats();
         hideModal();
@@ -1123,7 +1579,7 @@ function confirmReset() {
 function exportData() {
   const lines = [];
   lines.push("══════════════════════════════════");
-  lines.push("  MI ÁLBUM PANINI · MUNDIAL 2026");
+  lines.push(`  ${userCode.toUpperCase()} · MUNDIAL 2026`);
   lines.push("══════════════════════════════════");
   lines.push("");
   const owned = Object.keys(state.owned).length;
@@ -1143,20 +1599,14 @@ function exportData() {
   const dupeNums = Object.keys(state.dupes).map(Number).sort((a,b)=>a-b);
   if (dupeNums.length === 0) lines.push("(ninguna)");
   else dupeNums.forEach(n => lines.push(`#${n} ×${state.dupes[n]}`));
-  lines.push("");
   const text = lines.join("\n");
-
-  const data = JSON.stringify(state);
 
   showModal({
     title: "Exportar",
-    body: "Copiá el listado para compartir, o guardá el código de respaldo para importar en otro dispositivo.",
-    custom: `<pre>${text.replace(/</g, '&lt;')}</pre>
-      <p style="margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--ink-dim);">Código de respaldo</p>
-      <pre style="font-size:10px;max-height:80px;">${data}</pre>`,
+    body: "Listado de tu álbum para compartir por WhatsApp.",
+    custom: `<pre>${text.replace(/</g, '&lt;')}</pre>`,
     actions: [
-      { label: "Copiar listado", primary: true, onClick: () => copyText(text, "Listado copiado") },
-      { label: "Copiar respaldo", onClick: () => copyText(data, "Respaldo copiado") },
+      { label: "Copiar", primary: true, onClick: () => copyText(text, "Listado copiado") },
       { label: "Cerrar", onClick: hideModal }
     ]
   });
@@ -1182,35 +1632,7 @@ function fallbackCopy(text, msg) {
   document.body.removeChild(ta);
 }
 
-function importData() {
-  showModal({
-    title: "Importar respaldo",
-    body: "Pegá el código de respaldo que copiaste antes. Esto reemplazará tu progreso actual.",
-    custom: `<textarea id="import-text" rows="6" style="width:100%;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:10px;color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:11px;resize:vertical;"></textarea>`,
-    actions: [
-      { label: "Cancelar", onClick: hideModal },
-      { label: "Importar", primary: true, onClick: () => {
-        const txt = document.getElementById('import-text').value.trim();
-        try {
-          const parsed = JSON.parse(txt);
-          if (typeof parsed === 'object' && parsed.owned !== undefined) {
-            state.owned = parsed.owned || {};
-            state.dupes = parsed.dupes || {};
-            saveState();
-            render();
-            updateStats();
-            hideModal();
-            showToast("Respaldo importado");
-          } else throw new Error("formato inválido");
-        } catch(e) {
-          showToast("Código inválido");
-        }
-      }}
-    ]
-  });
-}
-
-// ===================== UI =====================
+// ===================== UI HELPERS =====================
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -1289,7 +1711,6 @@ function stickerHTML(n, opts = {}) {
   </button>`;
 }
 
-// Long-press handler para mobile
 let touchTimer = null;
 let touchedN = null;
 window.startTouch = function(n) {
@@ -1298,7 +1719,6 @@ window.startTouch = function(n) {
     if (touchedN === n) {
       addDupe(n);
       touchedN = null;
-      // suprimir el siguiente click
       window._suppressClick = true;
       setTimeout(() => { window._suppressClick = false; }, 400);
     }
@@ -1309,7 +1729,6 @@ window.endTouch = function(e) {
   touchedN = null;
 };
 
-// Interceptar clicks suprimidos
 document.addEventListener('click', (e) => {
   if (window._suppressClick && e.target.closest('.sticker')) {
     e.preventDefault();
@@ -1318,17 +1737,17 @@ document.addEventListener('click', (e) => {
 }, true);
 
 function render() {
-  const q = (document.getElementById('search').value || '').toLowerCase().trim();
+  const q = (document.getElementById('search')?.value || '').toLowerCase().trim();
   const c = document.getElementById('content');
   if (currentTab === 'teams') c.innerHTML = renderTeams(q);
   else if (currentTab === 'numbers') c.innerHTML = renderNumbers(q);
-  else c.innerHTML = renderTrades(q);
+  else if (currentTab === 'trades') c.innerHTML = renderTrades(q);
+  else if (currentTab === 'family') renderFamily(c);
 }
 
 function renderTeams(q) {
   let html = '';
 
-  // Especiales
   const specialsMatch = specials.filter(s =>
     !q || s.title.toLowerCase().includes(q) ||
     Array.from({length: s.end - s.start + 1}, (_,i) => String(s.start + i)).some(n => n.includes(q))
@@ -1365,7 +1784,6 @@ function renderTeams(q) {
     });
   }
 
-  // Equipos por confederación
   const byConf = {};
   teams.forEach(t => {
     if (q) {
@@ -1474,22 +1892,176 @@ function renderTrades(q) {
   return html;
 }
 
+async function renderFamily(container) {
+  container.innerHTML = '<div class="empty">Cargando familia...</div>';
+  const family = getFamilyList();
+  if (family.length === 0) {
+    container.innerHTML = `<div class="family-empty">
+      Acá vas a ver el progreso de toda la familia.<br>
+      Pedile a tu familiar que entre con su código en este mismo dispositivo<br>
+      o agregalo manualmente abajo si ya tiene su colección.
+    </div>
+    <div class="family-add-form">
+      <input type="text" id="family-add-input" placeholder="Agregar código familiar..." maxlength="20" />
+      <button class="btn primary" onclick="addFamilyManual()">Agregar</button>
+    </div>`;
+    return;
+  }
+
+  // Cargar datos de cada miembro
+  const results = await Promise.all(family.map(async code => {
+    try {
+      const data = await loadFromCloud(code);
+      return { code, data: data || { owned: {}, dupes: {} } };
+    } catch(e) {
+      return { code, data: { owned: {}, dupes: {} }, error: true };
+    }
+  }));
+
+  let html = '<div class="family-grid">';
+  results.sort((a, b) => {
+    const ao = Object.keys(a.data.owned || {}).length;
+    const bo = Object.keys(b.data.owned || {}).length;
+    return bo - ao;
+  }).forEach(r => {
+    const owned = Object.keys(r.data.owned || {}).length;
+    const dupes = Object.values(r.data.dupes || {}).reduce((a,b)=>a+b,0);
+    const pct = Math.round((owned / TOTAL) * 100);
+    const isMe = r.code === userCode;
+    html += `<div class="family-card ${isMe ? 'me' : ''}">
+      <div class="family-card-head">
+        <span class="family-name">${escapeHtml(r.code)}</span>
+        ${isMe ? '<span class="family-me-tag">Vos</span>' : ''}
+      </div>
+      <div class="family-pct">${pct}%</div>
+      <div class="family-bar"><div class="family-bar-fill" style="width:${pct}%"></div></div>
+      <div class="family-stat-row">
+        <span>${owned}/${TOTAL}</span>
+        <span>${dupes} repes</span>
+      </div>
+      ${!isMe ? `<div class="family-stat-row" style="margin-top:8px;">
+        <button class="mini-btn" onclick="viewFamilyMember('${escapeAttr(r.code)}')">Ver faltantes</button>
+        <button class="mini-btn" onclick="removeFamilyMember('${escapeAttr(r.code)}')">Quitar</button>
+      </div>` : ''}
+    </div>`;
+  });
+  html += '</div>';
+
+  html += `<div class="family-add-form" style="margin-top:20px;">
+    <input type="text" id="family-add-input" placeholder="Agregar otro código..." maxlength="20" />
+    <button class="btn primary" onclick="addFamilyManual()">Agregar</button>
+  </div>`;
+
+  container.innerHTML = html;
+}
+
+window.addFamilyManual = async function() {
+  const input = document.getElementById('family-add-input');
+  const code = input.value.trim().toLowerCase().replace(/[^a-z0-9_-]/g, '');
+  if (!code || code.length < 2) {
+    showToast('Código inválido');
+    return;
+  }
+  try {
+    const data = await loadFromCloud(code);
+    if (!data) {
+      showToast('Ese código no existe todavía');
+      return;
+    }
+    addToFamily(code);
+    showToast(`${code} agregado`);
+    render();
+  } catch(e) {
+    showToast('Error de conexión');
+  }
+};
+
+window.removeFamilyMember = function(code) {
+  removeFromFamily(code);
+  showToast(`${code} quitado de la lista`);
+  render();
+};
+
+window.viewFamilyMember = async function(code) {
+  try {
+    const data = await loadFromCloud(code);
+    if (!data) { showToast('No se pudo cargar'); return; }
+    const owned = data.owned || {};
+    const myMissing = [];
+    teams.forEach(t => {
+      const teamMissing = [];
+      for (let i = t.start; i <= t.end; i++) {
+        if (!state.owned[i] && owned[i]) teamMissing.push(i);
+      }
+      if (teamMissing.length) myMissing.push({ team: t.n, nums: teamMissing });
+    });
+
+    let body = `<p>Láminas que <strong>${escapeHtml(code)}</strong> tiene y vos no:</p>`;
+    if (myMissing.length === 0) {
+      body += '<p style="color:var(--ink-dim);">No hay láminas que te puedan completar.</p>';
+    } else {
+      body += '<pre>' + myMissing.map(m => `${m.team}: ${m.nums.join(', ')}`).join('\n') + '</pre>';
+    }
+
+    showModal({
+      title: `Intercambio con ${code}`,
+      custom: body,
+      actions: [{ label: 'Cerrar', onClick: hideModal }]
+    });
+  } catch(e) {
+    showToast('Error de conexión');
+  }
+};
+
 // ===================== SEARCH =====================
 let searchTimer = null;
-document.getElementById('search').addEventListener('input', () => {
-  clearTimeout(searchTimer);
-  searchTimer = setTimeout(render, 120);
+document.addEventListener('input', (e) => {
+  if (e.target.id === 'search') {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(render, 120);
+  }
 });
 
-// Prevenir menú contextual en stickers (móvil)
 document.addEventListener('contextmenu', (e) => {
   if (e.target.closest('.sticker')) e.preventDefault();
 });
 
-// ===================== INIT =====================
-loadState();
-render();
-updateStats();
+// Permitir Enter en login
+document.getElementById('login-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') doLogin();
+});
+
+// ===================== AUTO LOGIN =====================
+(async function init() {
+  try {
+    const saved = localStorage.getItem(SESSION_KEY);
+    if (saved) {
+      document.getElementById('login-input').value = saved;
+      document.getElementById('login-btn').disabled = true;
+      document.getElementById('login-btn').textContent = 'Cargando...';
+      setSyncStatus('loading');
+      const data = await loadFromCloud(saved);
+      if (data) {
+        state = { owned: data.owned || {}, dupes: data.dupes || {} };
+      } else {
+        // Restaurar backup local si existe
+        try {
+          const backup = localStorage.getItem(`panini_backup_${saved}`);
+          if (backup) state = JSON.parse(backup);
+        } catch(e) {}
+      }
+      userCode = saved;
+      lastSavedSnapshot = JSON.stringify(state);
+      addToFamily(saved);
+      enterApp();
+      setSyncStatus('saved');
+    }
+  } catch(e) {
+    console.error('auto-login failed', e);
+    document.getElementById('login-btn').disabled = false;
+    document.getElementById('login-btn').textContent = 'Entrar';
+  }
+})();
 </script>
 </body>
 </html>
