@@ -1605,43 +1605,230 @@ function confirmReset() {
   });
 }
 
-function exportData() {
+function buildExportText(opts = {}) {
+  const compact = opts.compact || false;
   const lines = [];
-  lines.push("══════════════════════════════════");
-  lines.push(`  ${userCode.toUpperCase()} · MUNDIAL 2026`);
-  lines.push("══════════════════════════════════");
-  lines.push("");
+
+  if (!compact) {
+    lines.push("══════════════════════════════════");
+    lines.push(`  ${userCode.toUpperCase()} · MUNDIAL 2026`);
+    lines.push("══════════════════════════════════");
+    lines.push("");
+  } else {
+    lines.push(`📋 ${userCode.toUpperCase()} · Mundial 2026`);
+    lines.push("");
+  }
+
   const owned = Object.keys(state.owned).length;
   const dupes = Object.values(state.dupes).reduce((a,b)=>a+b,0);
-  lines.push(`Tenidas:   ${owned} / ${TOTAL} (${Math.round(owned/TOTAL*100)}%)`);
-  lines.push(`Faltan:    ${TOTAL - owned}`);
-  lines.push(`Repes:     ${dupes}`);
+  const missing = TOTAL - owned;
+
+  lines.push(`✅ Tenidas: ${owned}/${TOTAL} (${Math.round(owned/TOTAL*100)}%)`);
+  lines.push(`❌ Faltan:  ${missing}`);
+  lines.push(`🔁 Repes:   ${dupes}`);
   lines.push("");
-  lines.push("─── FALTANTES ───");
+
+  // ───── FALTANTES ─────
+  lines.push("━━━ FALTANTES ━━━");
+  lines.push("");
+
   // Especiales primero
   specials.forEach(s => {
-    const missing = s.ids.filter(id => !state.owned[id]);
-    if (missing.length) lines.push(`${s.title} (${missing.length}): ${missing.join(", ")}`);
+    const missingIds = s.ids.filter(id => !state.owned[id]);
+    if (missingIds.length) {
+      lines.push(`• ${s.title} (${missingIds.length})`);
+      lines.push(`  ${missingIds.join(", ")}`);
+    }
   });
+
+  // Agrupar equipos por confederación
+  const byConf = {};
   teams.forEach(t => {
-    const missing = t.ids.filter(id => !state.owned[id]);
-    if (missing.length) lines.push(`${t.n} (${missing.length}): ${missing.join(", ")}`);
+    if (!byConf[t.g]) byConf[t.g] = [];
+    byConf[t.g].push(t);
   });
-  lines.push("");
-  lines.push("─── REPES PARA INTERCAMBIAR ───");
+
+  Object.keys(byConf).forEach(conf => {
+    let confLines = [];
+    byConf[conf].forEach(t => {
+      const missingIds = t.ids.filter(id => !state.owned[id]);
+      if (missingIds.length) {
+        // Mostrar solo los números (sin prefijo) para que sea más corto
+        const nums = missingIds.map(id => id.replace(t.code, ''));
+        confLines.push(`• ${t.n} (${missingIds.length}/${STICKERS_PER_TEAM})`);
+        confLines.push(`  ${t.code}: ${nums.join(", ")}`);
+      }
+    });
+    if (confLines.length) {
+      lines.push("");
+      lines.push(`[${conf}]`);
+      lines.push(...confLines);
+    }
+  });
+
+  // ───── REPES ─────
   const dupeIds = Object.keys(state.dupes).sort();
-  if (dupeIds.length === 0) lines.push("(ninguna)");
-  else dupeIds.forEach(id => lines.push(`${id} ×${state.dupes[id]}`));
-  const text = lines.join("\n");
+  if (dupeIds.length > 0) {
+    lines.push("");
+    lines.push("━━━ REPES PARA INTERCAMBIAR ━━━");
+    lines.push("");
+    // Agrupar por equipo/sección para que sea más legible
+    const dupesByGroup = {};
+    dupeIds.forEach(id => {
+      const m = id.match(/^([A-Z]*)(\d+)$/);
+      if (!m) return;
+      const prefix = m[1];
+      let groupName, sortKey;
+      const t = teams.find(x => x.code === prefix);
+      if (t) {
+        groupName = `${t.n} (${t.code})`;
+        sortKey = `2_${t.g}_${t.n}`;
+      } else {
+        const sp = specials.find(x => x.prefix === prefix);
+        if (sp) {
+          groupName = sp.title;
+          sortKey = `1_${sp.title}`;
+        } else {
+          groupName = "Especial";
+          sortKey = `0_special`;
+        }
+      }
+      if (!dupesByGroup[sortKey]) dupesByGroup[sortKey] = { name: groupName, items: [] };
+      dupesByGroup[sortKey].items.push(`${id}×${state.dupes[id]}`);
+    });
+    Object.keys(dupesByGroup).sort().forEach(k => {
+      const g = dupesByGroup[k];
+      lines.push(`• ${g.name}`);
+      lines.push(`  ${g.items.join(", ")}`);
+    });
+  }
+
+  lines.push("");
+  lines.push("───");
+  lines.push(`Generado: ${new Date().toLocaleString('es-CL')}`);
+
+  return lines.join("\n");
+}
+
+function downloadFile(filename, text) {
+  try {
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }, 100);
+    return true;
+  } catch (e) {
+    console.error('download failed', e);
+    return false;
+  }
+}
+
+async function shareViaSystem(text, title) {
+  // Web Share API: ideal para mobile, permite abrir WhatsApp/mail/etc.
+  if (navigator.share) {
+    try {
+      await navigator.share({ title, text });
+      return true;
+    } catch (e) {
+      // Usuario canceló, no es un error real
+      return false;
+    }
+  }
+  return false;
+}
+
+function shareWhatsApp(text) {
+  // Fallback directo a WhatsApp: abre la app o WhatsApp Web con el texto pre-cargado
+  const encoded = encodeURIComponent(text);
+  // El límite práctico es ~2000 caracteres, si excede usamos un texto resumido
+  let finalText = text;
+  if (encoded.length > 2000) {
+    finalText = "Mi álbum del Mundial 2026 (resumen):\n\n" +
+      `Tenidas: ${Object.keys(state.owned).length}/${TOTAL}\n` +
+      `Faltan: ${TOTAL - Object.keys(state.owned).length}\n` +
+      `Repes: ${Object.values(state.dupes).reduce((a,b)=>a+b,0)}\n\n` +
+      "(El listado completo es muy largo para WhatsApp directo, lo mejor es descargar el .txt y adjuntarlo)";
+  }
+  const url = `https://wa.me/?text=${encodeURIComponent(finalText)}`;
+  window.open(url, '_blank');
+}
+
+function exportData() {
+  const text = buildExportText();
+  const compact = buildExportText({ compact: true });
+  const owned = Object.keys(state.owned).length;
+  const missing = TOTAL - owned;
+  const dupes = Object.values(state.dupes).reduce((a,b)=>a+b,0);
+  const today = new Date().toISOString().slice(0, 10);
+  const filename = `album-${userCode}-${today}.txt`;
+
+  const canShare = !!navigator.share;
+
+  const custom = `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;">
+      <div style="background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:10px;text-align:center;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--accent);line-height:1;">${owned}</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:1px;margin-top:4px;">Tenidas</div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:10px;text-align:center;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--accent-cool);line-height:1;">${missing}</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:1px;margin-top:4px;">Faltan</div>
+      </div>
+      <div style="background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);padding:10px;text-align:center;">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--accent-warm);line-height:1;">${dupes}</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:1px;margin-top:4px;">Repes</div>
+      </div>
+    </div>
+    <pre style="max-height:280px;">${text.replace(/</g, '&lt;')}</pre>
+    <p style="font-size:12px;color:var(--ink-dim);margin-bottom:4px;">Llevá el listado al intercambio:</p>
+  `;
+
+  const actions = [
+    {
+      label: "📥 Descargar TXT",
+      primary: true,
+      onClick: () => {
+        const ok = downloadFile(filename, text);
+        if (ok) showToast("Archivo descargado");
+        else showToast("No se pudo descargar");
+      }
+    }
+  ];
+
+  if (canShare) {
+    actions.push({
+      label: "📤 Compartir",
+      onClick: async () => {
+        const ok = await shareViaSystem(compact, `Álbum ${userCode}`);
+        if (ok) hideModal();
+      }
+    });
+  } else {
+    actions.push({
+      label: "💬 WhatsApp",
+      onClick: () => shareWhatsApp(compact)
+    });
+  }
+
+  actions.push({
+    label: "Copiar",
+    onClick: () => copyText(text, "Listado copiado")
+  });
+
+  actions.push({ label: "Cerrar", onClick: hideModal });
 
   showModal({
-    title: "Exportar",
-    body: "Listado de tu álbum para compartir por WhatsApp.",
-    custom: `<pre>${text.replace(/</g, '&lt;')}</pre>`,
-    actions: [
-      { label: "Copiar", primary: true, onClick: () => copyText(text, "Listado copiado") },
-      { label: "Cerrar", onClick: hideModal }
-    ]
+    title: "Exportar listado",
+    body: "Llevátelo al intercambio: descargá el archivo .txt o compartilo directo.",
+    custom,
+    actions
   });
 }
 
